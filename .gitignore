@@ -3,3 +3,4 @@ vendor
 .env
 solution.tar.gz
 .idea
+.phpunit.result.cache

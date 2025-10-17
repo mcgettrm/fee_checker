@@ -1,7 +1,8 @@
 #!/usr/bin/env php
 <?php
+declare(strict_types=1);
 
-require_once dirname(__DIR__).'/vendor/autoload.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 /**
  * Please note that you CAN modify this file in any way to suit your needs, but be advised that it MUST conform to
@@ -10,5 +11,12 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 
 $amountString = $argv[1] ?? '';
 $termString = $argv[2] ?? '';
+if (!$amountString) {
+    echo "You must provide an amount\n";
+}
+
+if (!$termString) {
+    echo "You must provide a term\n";
+}
 
 echo "Application: Running fee checker\n";
