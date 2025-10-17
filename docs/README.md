@@ -16,3 +16,9 @@ In the root of the project directory, run:
 ## Development
 
 `docker compose up -d --build` <-- Force rebuild
+
+## Some Decisions Tradeoffs
+
+Decided not to provide helpful validation output to `STDOUT`. The spirit of the brief implied to me that it should
+return a well-formatted fee or nothing and that the error code would cover the rest but this is something I would look
+at further. 

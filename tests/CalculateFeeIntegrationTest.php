@@ -90,5 +90,39 @@ class CalculateFeeIntegrationTest extends TestCase
         );
     }
 
+    public function testBreachingUpperLoanAmountCausesErrorExistCode(): void
+    {
+        $loanAmount = '20,250.00';
+        $term = '12';
+        exec("php {$this->binaryLocation} {$loanAmount} {$term}", $output, $exitCode);
+        $this->assertEquals(1, $exitCode);
+        $this->assertEmpty($output);
+    }
+
+    public function testBreachingLowerLoanAmountCausesErrorExistCode(): void
+    {
+        $loanAmount = '250.00';
+        $term = '12';
+        exec("php {$this->binaryLocation} {$loanAmount} {$term}", $output, $exitCode);
+        $this->assertEquals(1, $exitCode);
+        $this->assertEmpty($output);
+    }
+
+    public function testUpperLoanAmountBoundaryIsInclusiveEdgeCase(): void
+    {
+        $loanAmount = '20,000.00';
+        $term = '12';
+        exec("php {$this->binaryLocation} {$loanAmount} {$term}", $output, $exitCode);
+        $this->assertEquals(0, $exitCode);
+    }
+
+    public function testLowerLoanAmountBoundaryIsInclusiveEdgeCase(): void
+    {
+        $loanAmount = '1000.00';
+        $term = '12';
+        exec("php {$this->binaryLocation} {$loanAmount} {$term}", $output, $exitCode);
+        $this->assertEquals(0, $exitCode);
+    }
+
 
 }

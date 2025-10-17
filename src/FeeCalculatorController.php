@@ -6,6 +6,9 @@ use Lendable\Interview\utils\CurrencyUtilities;
 
 class FeeCalculatorController
 {
+    private int $maxAmount = 2000000;
+    private int $minAmount = 100000;
+
     public function __construct(private FeeCalculatorService $feeCalculatorService)
     {
     }
@@ -21,10 +24,23 @@ class FeeCalculatorController
     {
         $amountPense = CurrencyUtilities::convertStringToPense($amount);
         $termInt = (int)$term;
+
+        //TODO::Bitmask for error messages here? Feels a bit heavy-handed
         if (!$amountPense || !$termInt) {
             throw new \Exception("Invalid inputs");
         }
+
+        if (!$this->amountIsWithinBounds($amountPense)) {
+            throw new \Exception(
+                "The requested loan amount does not fall within our lending limits (£1,000 - £20,000)"
+            );
+        }
         $fee = $this->feeCalculatorService->calculate(CurrencyUtilities::convertStringToPense($amount), (int)$term);
         return CurrencyUtilities::convertPenseToDisplay($fee);
+    }
+
+    private function amountIsWithinBounds(int $amount): bool
+    {
+        return ($amount <= $this->maxAmount && $amount >= $this->minAmount);
     }
 }
