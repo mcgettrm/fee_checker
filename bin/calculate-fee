@@ -14,11 +14,11 @@ $termString = $argv[2] ?? '';
 
 try {
     if (!$amountString) {
-        throw new \Exception("You must provide an amount\n");
+        throw new \Exception("You must provide an amount" . PHP_EOL);
     }
 
     if (!$termString) {
-        throw new \Exception("You must provide a term\n");
+        throw new \Exception("You must provide a term" . PHP_EOL);
     }
 
     $feeCalculator = new \Lendable\Interview\FeeCalculatorController(
@@ -26,10 +26,10 @@ try {
                     new \Lendable\Interview\Repositories\FeeStructureHardCodedRepository()
             ),
     );
-    fwrite(STDOUT, $feeCalculator->getFeeForAmountAndTerm($amountString, $termString) . '\n');
+    fwrite(STDOUT, "{$feeCalculator->getFeeForAmountAndTerm($amountString, $termString)}" . PHP_EOL);
     exit(0);
 } catch (\Exception $e) {
-    fwrite(STDERR, "Error: " . $e->getMessage() . "\n");
+    fwrite(STDERR, "Error: " . $e->getMessage() . PHP_EOL);
     exit(1);
 }
 

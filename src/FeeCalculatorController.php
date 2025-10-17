@@ -39,7 +39,7 @@ class FeeCalculatorController
             );
         }
 
-        if (!$this->termIsValid($term)) {
+        if (!$this->termIsValid($termInt)) {
             throw new \Exception(
                 "The requested term can be only 12 or 24. Requested term: $term"
             );
