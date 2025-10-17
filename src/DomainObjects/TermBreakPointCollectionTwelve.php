@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Lendable\Interview\DomainObjects;
 
 class TermBreakPointCollectionTwelve extends AbstractTermBreakPointCollection implements

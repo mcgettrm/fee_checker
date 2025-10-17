@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Lendable\Interview\Tests\Strategy;
 
 use Lendable\Interview\DomainObjects\TermBreakPointCollectionTwelve;
