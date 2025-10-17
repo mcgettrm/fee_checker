@@ -2,7 +2,7 @@
 
 namespace Lendable\Interview\Tests\utils;
 
-use Lendable\Interview\utils\CurrencyUtilities;
+use Lendable\Interview\Utils\CurrencyUtilities;
 use PHPUnit\Framework\TestCase;
 
 class CurrencyUtilitiesTest extends TestCase
@@ -12,7 +12,7 @@ class CurrencyUtilitiesTest extends TestCase
         $input = '11,500.00';
         $this->assertEquals(
             1150000,
-            CurrencyUtilities::convertStringToPense($input),
+            CurrencyUtilities::convertStringToPence($input),
             'The first example string did not convert correctly to an integer'
         );
     }
@@ -22,17 +22,17 @@ class CurrencyUtilitiesTest extends TestCase
         $input = '19,250.00';
         $this->assertEquals(
             1925000,
-            CurrencyUtilities::convertStringToPense($input),
+            CurrencyUtilities::convertStringToPence($input),
             'The second example string did not convert correctly to an integer'
         );
     }
 
-    public function testCanGenerateExpectedOutputFromPenseValue()
+    public function testCanGenerateExpectedOutputFromPenceValue()
     {
         $input = 1925000;
         $this->assertEquals(
             '19,250.00',
-            CurrencyUtilities::convertPenseToDisplay($input),
+            CurrencyUtilities::convertPenceToDisplay($input),
         );
     }
 
@@ -41,7 +41,7 @@ class CurrencyUtilitiesTest extends TestCase
         $input = '19,250.55';
         $this->assertEquals(
             1925055,
-            CurrencyUtilities::convertStringToPense($input)
+            CurrencyUtilities::convertStringToPence($input)
         );
     }
 
@@ -50,7 +50,7 @@ class CurrencyUtilitiesTest extends TestCase
         $input = 1925055;
         $this->assertEquals(
             '19,250.55',
-            CurrencyUtilities::convertPenseToDisplay($input)
+            CurrencyUtilities::convertPenceToDisplay($input)
         );
     }
 }
