@@ -11,12 +11,20 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 $amountString = $argv[1] ?? '';
 $termString = $argv[2] ?? '';
+
+$isError = false;
 if (!$amountString) {
+    $isError = true;
     echo "You must provide an amount\n";
 }
 
 if (!$termString) {
+    $isError = true;
     echo "You must provide a term\n";
 }
-
+if ($isError) {
+    exit(1);
+}
 echo "Application: Running fee checker\n";
+
+exit(0);
