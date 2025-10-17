@@ -12,25 +12,21 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 $amountString = $argv[1] ?? '';
 $termString = $argv[2] ?? '';
 
-$isError = false;
-if (!$amountString) {
-    $isError = true;
-    echo "You must provide an amount\n";
-}
+try {
+    if (!$amountString) {
+        throw new \Exception("You must provide an amount\n");
+    }
 
-if (!$termString) {
-    $isError = true;
-    echo "You must provide a term\n";
-}
-if ($isError) {
-    fwrite(STDERR, "Error: Something went wrong!\n");
+    if (!$termString) {
+        throw new \Exception("You must provide a term\n");
+    }
+
+    $feeCalculator = new \Lendable\Interview\FeeCalculatorController(new \Lendable\Interview\FeeCalculatorService());
+    fwrite(STDOUT, $feeCalculator->getFeeForAmountAndTerm($amountString, $termString) . '\n');
+    exit(0);
+} catch (\Exception $e) {
+    fwrite(STDERR, "Error: " . $e->getMessage() . "\n");
     exit(1);
 }
-echo "Application: Running fee checker\n";
-
-$feeCalculator = new \Lendable\Interview\FeeCalculatorController();
-
-echo "Fee: " . $feeCalculator->calculate((float)$amountString, (int)$termString);
 
 
-exit(0);

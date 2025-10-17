@@ -2,26 +2,29 @@
 
 namespace Lendable\Interview;
 
+use Lendable\Interview\utils\CurrencyUtilities;
+
 class FeeCalculatorController
 {
-    /**
-     * The amount to borrow
-     * @param float $amount
-     *
-     * The desired term measured in months
-     * @param int $term
-     *
-     * @return string
-     */
-    public function calculate(float $amount, int $term): string
+    public function __construct(private FeeCalculatorService $feeCalculatorService)
     {
-        echo "Received amount {$amount} and term {$term}\n";
-        if ($amount === 11500.00 && $term === 24) {
-            return '460.00';
+    }
+
+    /**
+     *
+     * @param string $amount
+     * @param string $term
+     * @return string
+     * @throws \Exception
+     */
+    public function getFeeForAmountAndTerm(string $amount, string $term): string
+    {
+        $amountPense = CurrencyUtilities::convertStringToPense($amount);
+        $termInt = (int)$term;
+        if (!$amountPense || !$termInt) {
+            throw new \Exception("Invalid inputs");
         }
-        if ($amount === 19250.00 && $term === 12) {
-            return '385.00';
-        }
-        return 'Could not calculate';
+        $fee = $this->feeCalculatorService->calculate(CurrencyUtilities::convertStringToPense($amount), (int)$term);
+        return CurrencyUtilities::convertPenseToDisplay($fee);
     }
 }

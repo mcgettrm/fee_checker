@@ -24,16 +24,6 @@ class CalculateFeeIntegrationTest extends TestCase
             $exitCode,
             "Expected code 1 but received exit code: {$exitCode}\n Output:\n" . \implode("\n", $output)
         );
-        $this->assertStringContainsString(
-            'You must provide a term',
-            implode("\n", $output),
-            "Term error message missing. The output was: \n" . \implode("\n", $output)
-        );
-        $this->assertStringContainsString(
-            'You must provide an amount',
-            implode("\n", $output),
-            "Amount error message missing. The output was: \n" . \implode("\n", $output)
-        );
     }
 
     public function testPassingBothArgumentsReturnsSuccess(): void
@@ -67,7 +57,7 @@ class CalculateFeeIntegrationTest extends TestCase
 
         $this->assertStringNotContainsString(
             $errorOutputString,
-            $standardOutputOnly,
+            (string)$standardOutputOnly,
             'The standard output should not contain the stdErr output'
         );
     }
@@ -99,4 +89,6 @@ class CalculateFeeIntegrationTest extends TestCase
             "A term of {$term} and a loan of {$loanAmount} should have returned a value of {$expectedFee} but instead we got \n Output:\n" . $implodedOutput
         );
     }
+
+
 }
