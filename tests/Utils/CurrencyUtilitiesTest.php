@@ -1,6 +1,6 @@
 <?php
 
-namespace Lendable\Interview\Tests\utils;
+namespace Lendable\Interview\Tests\Utils;
 
 use Lendable\Interview\Utils\CurrencyUtilities;
 use PHPUnit\Framework\TestCase;

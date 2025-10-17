@@ -17,6 +17,11 @@ class FeeStructure implements FeeStructureInterface
 
     public function getFeeForLoanAmount(int $loanAmount): int
     {
-        // TODO: Implement getFeeForLoanAmount() method.
+        return $this->strategy->calculateFeeForLoanAmount($loanAmount, $this->termBreakPointCollection);
+    }
+
+    public function getTermIdentifier(): FeeStructureTermEnum
+    {
+        return $this->term;
     }
 }

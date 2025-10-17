@@ -2,6 +2,8 @@
 
 namespace Lendable\Interview\DomainObjects;
 
+use Lendable\Interview\Utils\FeeStructureTermEnum;
+
 interface FeeStructureInterface
 {
     /**
@@ -10,4 +12,6 @@ interface FeeStructureInterface
      * @return int
      */
     public function getFeeForLoanAmount(int $loanAmount): int;
+
+    public function getTermIdentifier(): FeeStructureTermEnum;
 }

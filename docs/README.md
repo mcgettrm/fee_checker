@@ -28,3 +28,4 @@ at further.
 - Special exception types?
 - Some way to stop the stdErr from outputting when runing phpunit?
 - Introduce a dependency injection container?
+- What if the mappings aren't ordered?

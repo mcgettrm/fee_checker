@@ -7,7 +7,7 @@ use Lendable\Interview\DomainObjects\FeeStructureInterface;
 use Lendable\Interview\DomainObjects\TermBreakPointCollectionInterface;
 use Lendable\Interview\DomainObjects\TermBreakPointCollectionTwelve;
 use Lendable\Interview\DomainObjects\TermBreakPointCollectionTwentyFour;
-use Lendable\Interview\Strategies\FeeRoundUpNearestFiveStrategy;
+use Lendable\Interview\Strategies\LinearRoundUpNearestFiveStrategy;
 use Lendable\Interview\Utils\FeeStructureTermEnum;
 
 class FeeStructureHardCodedRepository implements FeeStructureRepositoryInterface
@@ -16,7 +16,7 @@ class FeeStructureHardCodedRepository implements FeeStructureRepositoryInterface
     public function getFeeStructureByTerm(FeeStructureTermEnum $term): FeeStructureInterface
     {
         //TODO::Make this more DI-able? What if we want a different strategy?
-        $strategy = new FeeRoundUpNearestFiveStrategy();
+        $strategy = new LinearRoundUpNearestFiveStrategy();
         $mapping = $this->getBreakpointMappignForTerm($term);
         return new FeeStructure($term, $mapping, $strategy);
     }
