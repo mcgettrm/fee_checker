@@ -2,24 +2,26 @@
 
 namespace Lendable\Interview;
 
-use Lendable\Interview\Repositories\FeeStructureHardCodedRepository;
+use Lendable\Interview\Repositories\FeeStructureRepositoryInterface;
+use Lendable\Interview\Utils\FeeStructureTermEnum;
 
 class FeeCalculatorService
 {
-    public function __construct(private FeeStructureHardCodedRepository $feeStructureHardCodedRepository)
+    public function __construct(private FeeStructureRepositoryInterface $feeStructureHardCodedRepository)
     {
     }
 
+    /**
+     * Load the correct fee structure, run the calculation
+     * @param int $amount
+     * @param int $term
+     * @return int
+     */
     public function calculate(int $amount, int $term): int
     {
-        if ($amount === 1150000 && $term === 24) {
-            return 46000;
-        }
-        if ($amount === 1925000 && $term === 12) {
-            return 38500;
-        }
-
-        //TODO:: Throw error?
-        return 0;
+        $feeStructure = $this->feeStructureHardCodedRepository->getFeeStructureByTerm(
+            FeeStructureTermEnum::tryFrom($term)
+        );
+        return $feeStructure->getFeeForLoanAmount($amount);
     }
 }
