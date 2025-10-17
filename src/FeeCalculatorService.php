@@ -2,8 +2,14 @@
 
 namespace Lendable\Interview;
 
+use Lendable\Interview\Repositories\FeeStructureHardCodedRepository;
+
 class FeeCalculatorService
 {
+    public function __construct(private FeeStructureHardCodedRepository $feeStructureHardCodedRepository)
+    {
+    }
+
     public function calculate(int $amount, int $term): int
     {
         if ($amount === 1150000 && $term === 24) {
