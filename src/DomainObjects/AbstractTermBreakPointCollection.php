@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Lendable\Interview\DomainObjects;
 
 use ArrayIterator;
+use Traversable;
 
 abstract class AbstractTermBreakPointCollection implements TermBreakPointCollectionInterface
 {
+    /**
+     * @var array<int, int>
+     */
     protected array $breakPoints = [];
 
     public function getFeeAtBreakpoint(int $loanAmount): int|null
@@ -18,7 +22,8 @@ abstract class AbstractTermBreakPointCollection implements TermBreakPointCollect
         return null;
     }
 
-    public function getIterator(): \Traversable
+    /** @return Traversable<int,int> */
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->breakPoints);
     }

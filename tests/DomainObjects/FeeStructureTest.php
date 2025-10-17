@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class FeeStructureTest extends TestCase
 {
-    public function testFeeReturnsOnBreakpoint()
+    public function testFeeReturnsOnBreakpoint(): void
     {
         $loanAmount = 100000;
         $expectedFee = 7000;

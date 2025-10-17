@@ -18,11 +18,16 @@ class FeeCalculatorService
      * @param int $amount
      * @param int $term
      * @return int
+     * @throws \Exception
      */
     public function calculate(int $amount, int $term): int
     {
+        $enumEntry = FeeStructureTermEnum::tryFrom($term);
+        if ($enumEntry === null) {
+            throw new \Exception("No fee structure could be found for $term");
+        }
         $feeStructure = $this->feeStructureHardCodedRepository->getFeeStructureByTerm(
-            FeeStructureTermEnum::tryFrom($term)
+            $enumEntry
         );
         return $feeStructure->getFeeForLoanAmount($amount);
     }

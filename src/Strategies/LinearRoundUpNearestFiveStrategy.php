@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Lendable\Interview\Strategies;
 
 use Lendable\Interview\DomainObjects\TermBreakPointCollectionInterface;
+use Traversable;
 
 class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
 {
@@ -15,12 +16,11 @@ class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
         if ($fee = $breakPointCollection->getFeeAtBreakpoint($loanAmount)) {
             return $fee;
         }
-
-
         //TODO::Order the breakpoints first -- needed?
         $lastLoanAmountBP = 0;
         $lastFeeAmountBP = 0;
         //TODO:: Assumes ordering
+        /** @var Traversable<int, int> $breakPointCollection */
         foreach ($breakPointCollection as $currentLoanAmountBP => $currentFeeAmountBP) {
             if ($lastLoanAmountBP < $loanAmount && $loanAmount < $currentLoanAmountBP) {
                 //Because the breakpoint gaps aren't regular, we need to be a bit careful here
@@ -33,6 +33,7 @@ class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
             $lastLoanAmountBP = $currentLoanAmountBP;
             $lastFeeAmountBP = $currentFeeAmountBP;
         }
+        throw new \Exception('No valid loan amount found for amount: ' . $loanAmount);
     }
 
     private function calculateLinearFeeBetweenBreakPoints(
@@ -46,14 +47,18 @@ class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
         $progressionFeeValue = $gapValue * $progression;
 
         $baseFeePence = $lowerBPFeeValue + $progressionFeeValue;
+        return $this->applyRoundUpNearestFive((int)$baseFeePence);
+    }
 
+    private function applyRoundUpNearestFive(int $baseFeePence): int
+    {
         $baseFeePounds = $baseFeePence / 100;
         //How far off the next multiple of 5 is it?
         $remainder = ($baseFeePounds) % 5;
         if ($remainder === 0) {
-            return $baseFeePence;
+            return (int)$baseFeePence;
         } else {
-            return $baseFeePence + ((5 - $remainder) * 100);
+            return (int)$baseFeePence + ((5 - $remainder) * 100);
         }
     }
 

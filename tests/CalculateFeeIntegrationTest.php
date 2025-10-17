@@ -48,7 +48,7 @@ class CalculateFeeIntegrationTest extends TestCase
 
         $this->assertStringContainsString(
             $errorOutputString,
-            $withStdErrOutput,
+            (string)$withStdErrOutput,
             "Amount error message missing. The output was: \n" . $withStdErrOutput
         );
 

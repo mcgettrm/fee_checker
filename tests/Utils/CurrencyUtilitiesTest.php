@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class CurrencyUtilitiesTest extends TestCase
 {
-    public function testExampleInputOneReturnsAsInteger()
+    public function testExampleInputOneReturnsAsInteger(): void
     {
         $input = '11,500.00';
         $this->assertEquals(
@@ -19,7 +19,7 @@ class CurrencyUtilitiesTest extends TestCase
         );
     }
 
-    public function testExampleInputTwoReturnsAsInteger()
+    public function testExampleInputTwoReturnsAsInteger(): void
     {
         $input = '19,250.00';
         $this->assertEquals(
@@ -29,7 +29,7 @@ class CurrencyUtilitiesTest extends TestCase
         );
     }
 
-    public function testCanGenerateExpectedOutputFromPenceValue()
+    public function testCanGenerateExpectedOutputFromPenceValue(): void
     {
         $input = 1925000;
         $this->assertEquals(
@@ -38,7 +38,7 @@ class CurrencyUtilitiesTest extends TestCase
         );
     }
 
-    public function testCurrencyStringToIntHandlesDecimals()
+    public function testCurrencyStringToIntHandlesDecimals(): void
     {
         $input = '19,250.55';
         $this->assertEquals(
@@ -47,7 +47,7 @@ class CurrencyUtilitiesTest extends TestCase
         );
     }
 
-    public function testCurrencyIntegerToDisplayHandlesDecimals()
+    public function testCurrencyIntegerToDisplayHandlesDecimals(): void
     {
         $input = 1925055;
         $this->assertEquals(

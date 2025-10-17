@@ -7,6 +7,10 @@ namespace Lendable\Interview\DomainObjects;
 class TermBreakPointCollectionTwelve extends AbstractTermBreakPointCollection implements
     TermBreakPointCollectionInterface
 {
+
+    /**
+     * @var array<int, int>
+     */
     protected array $breakPoints = [
         100000 => 5000,
         200000 => 9000,

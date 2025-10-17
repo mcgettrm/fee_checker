@@ -9,9 +9,9 @@ use Lendable\Interview\DomainObjects\TermBreakPointCollectionTwentyFour;
 use Lendable\Interview\Strategies\LinearRoundUpNearestFiveStrategy;
 use PHPUnit\Framework\TestCase;
 
-class LinearRoundupNearestFiveStrategyTest extends TestCase
+class LinearRoundUpNearestFiveStrategyTest extends TestCase
 {
-    public function testFeeReturnsOnBreakpoint()
+    public function testFeeReturnsOnBreakpoint(): void
     {
         $loanAmount = 100000;
         $expectedFee = 7000;
@@ -25,7 +25,7 @@ class LinearRoundupNearestFiveStrategyTest extends TestCase
         );
     }
 
-    public function testFeeReturnsLinearOffBreakpointFeeGap40()
+    public function testFeeReturnsLinearOffBreakpointFeeGap40(): void
     {
         $loanAmount = 1150000;
         $expectedFee = 46000;
@@ -39,7 +39,7 @@ class LinearRoundupNearestFiveStrategyTest extends TestCase
         );
     }
 
-    public function testFeeReturnsLinearOffBreakpointFeeGap30()
+    public function testFeeReturnsLinearOffBreakpointFeeGap30(): void
     {
         $loanAmount = 150000;
         $expectedFee = 8500;
@@ -53,7 +53,7 @@ class LinearRoundupNearestFiveStrategyTest extends TestCase
         );
     }
 
-    public function testFeeReturnsLinearOffBreakpointFeeGap30WithRoundUpNearestFive()
+    public function testFeeReturnsLinearOffBreakpointFeeGap30WithRoundUpNearestFive(): void
     {
         $loanAmount = 140000;
         $expectedFee = 8500;
@@ -67,7 +67,7 @@ class LinearRoundupNearestFiveStrategyTest extends TestCase
         );
     }
 
-    public function testFeeReturnsLinearOffBreakpointFeeGap30WithRoundUpNearestFiveMultipleOfTen()
+    public function testFeeReturnsLinearOffBreakpointFeeGap30WithRoundUpNearestFiveMultipleOfTen(): void
     {
         $loanAmount = 130000;
         $expectedFee = 8000;
@@ -81,7 +81,7 @@ class LinearRoundupNearestFiveStrategyTest extends TestCase
         );
     }
 
-    public function testLinearRoundupFiveWithGivenInputForTwelveMonthFeeStructure()
+    public function testLinearRoundupFiveWithGivenInputForTwelveMonthFeeStructure(): void
     {
         $loanAmount = 1925000;
         $expectedFee = 38500;
