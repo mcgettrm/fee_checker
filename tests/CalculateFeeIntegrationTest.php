@@ -38,7 +38,7 @@ class CalculateFeeIntegrationTest extends TestCase
 
     public function testPassingBothArgumentsReturnsSuccess(): void
     {
-        exec("php {$this->binaryLocation} --2000 --24", $output, $exitCode);
+        exec("php {$this->binaryLocation} 2000 24", $output, $exitCode);
         $this->assertEquals(
             0,
             $exitCode,
@@ -69,6 +69,34 @@ class CalculateFeeIntegrationTest extends TestCase
             $errorOutputString,
             $standardOutputOnly,
             'The standard output should not contain the stdErr output'
+        );
+    }
+
+    public function testExampleInputOne(): void
+    {
+        $loanAmount = '11,500.00';
+        $term = '24';
+        $expectedFee = '460.00';
+        exec("php {$this->binaryLocation} {$loanAmount} {$term}", $output);
+        $implodedOutput = implode("\n", $output);
+        $this->assertStringContainsString(
+            $expectedFee,
+            $implodedOutput,
+            "A term of {$term} and a loan of {$loanAmount} should have returned a value of {$expectedFee} but instead we got \n Output:\n" . $implodedOutput
+        );
+    }
+
+    public function testExampleInputTwo(): void
+    {
+        $loanAmount = '19,250.00';
+        $term = '12';
+        $expectedFee = '385.00';
+        exec("php {$this->binaryLocation} {$loanAmount} {$term}", $output);
+        $implodedOutput = implode("\n", $output);
+        $this->assertStringContainsString(
+            $expectedFee,
+            $implodedOutput,
+            "A term of {$term} and a loan of {$loanAmount} should have returned a value of {$expectedFee} but instead we got \n Output:\n" . $implodedOutput
         );
     }
 }

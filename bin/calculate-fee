@@ -28,4 +28,9 @@ if ($isError) {
 }
 echo "Application: Running fee checker\n";
 
+$feeCalculator = new \Lendable\Interview\FeeCalculatorController();
+
+echo "Fee: " . $feeCalculator->calculate((float)$amountString, (int)$termString);
+
+
 exit(0);
