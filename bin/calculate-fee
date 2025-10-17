@@ -23,6 +23,7 @@ if (!$termString) {
     echo "You must provide a term\n";
 }
 if ($isError) {
+    fwrite(STDERR, "Error: Something went wrong!\n");
     exit(1);
 }
 echo "Application: Running fee checker\n";
