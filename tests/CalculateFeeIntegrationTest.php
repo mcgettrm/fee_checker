@@ -124,5 +124,15 @@ class CalculateFeeIntegrationTest extends TestCase
         $this->assertEquals(0, $exitCode);
     }
 
-
+    public function testTermLengthOf15IsInvalid(): void
+    {
+        $loanAmount = '10,000.00';
+        $term = '15';
+        exec("php {$this->binaryLocation} {$loanAmount} {$term}", $output, $exitCode);
+        $this->assertEquals(
+            1,
+            $exitCode,
+            'Only term limits of 12 and 24 are valid. Per the docs, we can assume all inputs will be of these term limits'
+        );
+    }
 }
