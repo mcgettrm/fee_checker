@@ -21,4 +21,10 @@ In the root of the project directory, run:
 
 Decided not to provide helpful validation output to `STDOUT`. The spirit of the brief implied to me that it should
 return a well-formatted fee or nothing and that the error code would cover the rest but this is something I would look
-at further. 
+at further.
+
+## TODO
+
+- Special exception types?
+- Some way to stop the stdErr from outputting when runing phpunit?
+- Introduce a dependency injection container?

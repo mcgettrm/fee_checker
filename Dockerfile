@@ -2,6 +2,10 @@ FROM php:8.4-cli-alpine
 
 WORKDIR /app
 
+COPY --from=ghcr.io/mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
+RUN install-php-extensions gd xdebug
+
 # Grab a composer binary
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
