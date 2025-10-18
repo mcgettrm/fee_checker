@@ -10,6 +10,8 @@ use Lendable\Interview\Factories\DefaultFeeStructureFactory;
 use Lendable\Interview\Repositories\BreakPointHardCodedRepository;
 use Lendable\Interview\Strategies\FeeResolutionStrategyInterface;
 use Lendable\Interview\Strategies\LinearRoundUpStrategy;
+use Lendable\Interview\Strategies\LinearStrategy;
+use Lendable\Interview\Strategies\RoundUpToStrategy;
 use Lendable\Interview\Utils\CurrencyUtilities;
 use Lendable\Interview\Utils\FeeStructureTermEnum;
 use PHPUnit\Framework\TestCase;
@@ -37,7 +39,7 @@ class FeeStructureTest extends TestCase
         $feeStructure = new FeeStructure(
             FeeStructureTermEnum::TwentyFourMonth,
             $this->breakPoints24,
-            new LinearRoundUpStrategy()
+            new LinearRoundUpStrategy(new LinearStrategy(), new RoundUpToStrategy())
         );
         $actualFee = $feeStructure->getFeeForLoanAmount($loanAmount);
         $this->assertEquals(

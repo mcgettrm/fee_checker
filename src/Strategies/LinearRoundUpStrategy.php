@@ -10,8 +10,10 @@ use Money\Money;
 
 class LinearRoundUpStrategy implements FeeResolutionStrategyInterface
 {
-    public function __construct(private int $roundUpToValue = 5)
-    {
+    public function __construct(
+        private InterpolationStrategyInterface $interpolationStrategy,
+        private RoundingStrategyInterface $roundingStrategy,
+    ) {
     }
 
     public function calculateFeeForLoanAmount(
@@ -26,22 +28,24 @@ class LinearRoundUpStrategy implements FeeResolutionStrategyInterface
 
         $loanAmountPence = $loanAmount->getAmount();
         $orderedBreakPoints = $this->orderBreakPointsByKeys($breakPointCollection);
-        $lastLoanAmountBP = 0;
-        $lastFeeAmountBP = 0;
+        $previousLoanAmountBP = 0;
+        $previousFeeAmountBP = 0;
 
         /** @var array<int, int> $orderedBreakPoints */
         foreach ($orderedBreakPoints as $currentLoanAmountBP => $currentFeeAmountBP) {
-            if ($lastLoanAmountBP < $loanAmountPence && $loanAmountPence < $currentLoanAmountBP) {
+            if ($previousLoanAmountBP < $loanAmountPence && $loanAmountPence < $currentLoanAmountBP) {
                 return CurrencyUtilities::getMoneyFromPence(
-                    $this->calculateLinearFeeBetweenBreakPoints(
-                        $lastFeeAmountBP,
-                        $this->getProgressionDecimal($lastLoanAmountBP, $loanAmountPence, $currentLoanAmountBP),
-                        $currentFeeAmountBP
+                    $this->roundingStrategy->round(
+                        $this->interpolationStrategy->calculateFeeBetweenBreakPoints(
+                            $previousFeeAmountBP,
+                            $this->getProgressionDecimal($previousLoanAmountBP, $loanAmountPence, $currentLoanAmountBP),
+                            $currentFeeAmountBP
+                        )
                     )
                 );
             }
-            $lastLoanAmountBP = $currentLoanAmountBP;
-            $lastFeeAmountBP = $currentFeeAmountBP;
+            $previousLoanAmountBP = $currentLoanAmountBP;
+            $previousFeeAmountBP = $currentFeeAmountBP;
         }
         throw new \Exception('No valid loan amount found for amount: ' . $loanAmountPence);
     }
@@ -58,30 +62,6 @@ class LinearRoundUpStrategy implements FeeResolutionStrategyInterface
         $breakPointPairs = iterator_to_array($breakPointCollection);
         ksort($breakPointPairs, SORT_NUMERIC);
         return $breakPointPairs;
-    }
-
-    private function calculateLinearFeeBetweenBreakPoints(
-        int $lowerBPFeeValue,
-        float $progression,
-        int $higherBPFeeValue
-    ): int {
-        $gapValue = $higherBPFeeValue - $lowerBPFeeValue;
-
-        //What is the value of that progress, bearing in mind the gaps between break points vary and so do the corresponding fees
-        $progressionFeeValue = $gapValue * $progression;
-
-        $baseFeePence = $lowerBPFeeValue + $progressionFeeValue;
-        return $this->applyRoundUpNearestFive((int)$baseFeePence);
-    }
-
-    private function applyRoundUpNearestFive(int $baseFeePence): int
-    {
-        //Implicitly creates a float
-        $baseFeePounds = $baseFeePence / 100;
-        $roundedUp = ceil($baseFeePounds / $this->roundUpToValue) * $this->roundUpToValue;
-
-        //Convert back to pence
-        return (int)round($roundedUp * 100);
     }
 
     private function getProgressionDecimal(

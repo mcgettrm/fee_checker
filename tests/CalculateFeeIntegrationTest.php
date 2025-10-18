@@ -92,7 +92,7 @@ class CalculateFeeIntegrationTest extends TestCase
 
     public function testBreachingUpperLoanAmountCausesErrorExistCode(): void
     {
-        $loanAmount = '20,250.00';
+        $loanAmount = '20,000.01';
         $term = '12';
         exec("php {$this->binaryLocation} {$loanAmount} {$term}", $output, $exitCode);
         $this->assertEquals(1, $exitCode);
@@ -101,7 +101,7 @@ class CalculateFeeIntegrationTest extends TestCase
 
     public function testBreachingLowerLoanAmountCausesErrorExistCode(): void
     {
-        $loanAmount = '250.00';
+        $loanAmount = '999.99';
         $term = '12';
         exec("php {$this->binaryLocation} {$loanAmount} {$term}", $output, $exitCode);
         $this->assertEquals(1, $exitCode);

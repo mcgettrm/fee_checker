@@ -74,7 +74,7 @@ class BreakPointHardCodedRepository implements BreakPointRepositoryInterface
                 1900000 => 76000,
                 2000000 => 80000,
             ]),
-            default => throw new \Exception('Unknown term: ' . $term->value),
+            //No default required here - PHPStan needs to stay happy
         };
     }
 
