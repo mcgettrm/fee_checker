@@ -29,8 +29,8 @@ class BreakPointHardCodedRepository implements BreakPointRepositoryInterface
      */
     public function getBreakpointMappingForTerm(FeeStructureTermEnum $term): TermBreakPointCollectionInterface
     {
-        if ($term === FeeStructureTermEnum::TwelveMonth) {
-            return new BreakPointCollection([
+        return match ($term) {
+            FeeStructureTermEnum::TwelveMonth => new BreakPointCollection([
                 100000 => 5000,
                 200000 => 9000,
                 300000 => 9000,
@@ -51,9 +51,8 @@ class BreakPointHardCodedRepository implements BreakPointRepositoryInterface
                 1800000 => 36000,
                 1900000 => 38000,
                 2000000 => 40000,
-            ]);
-        } else {
-            return new BreakPointCollection([
+            ]),
+            FeeStructureTermEnum::TwentyFourMonth => new BreakPointCollection([
                 100000 => 7000,
                 200000 => 10000,
                 300000 => 12000,
@@ -74,8 +73,9 @@ class BreakPointHardCodedRepository implements BreakPointRepositoryInterface
                 1800000 => 72000,
                 1900000 => 76000,
                 2000000 => 80000,
-            ]);
-        }
+            ]),
+            default => throw new \Exception('Unknown term: ' . $term->value),
+        };
     }
 
 }
