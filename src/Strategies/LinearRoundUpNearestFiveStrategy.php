@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Lendable\Interview\Strategies;
 
-use Lendable\Interview\DomainObjects\BreakPointCollection;
 use Lendable\Interview\DomainObjects\TermBreakPointCollectionInterface;
-use Traversable;
 
 class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
 {
@@ -22,7 +20,7 @@ class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
         $lastLoanAmountBP = 0;
         $lastFeeAmountBP = 0;
 
-        /** @var Traversable<int, int> $breakPointCollection */
+        /** @var array<int, int> $orderedBreakPoints */
         foreach ($orderedBreakPoints as $currentLoanAmountBP => $currentFeeAmountBP) {
             if ($lastLoanAmountBP < $loanAmount && $loanAmount < $currentLoanAmountBP) {
                 //Because the breakpoint gaps aren't regular, we need to be a bit careful here
@@ -41,7 +39,7 @@ class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
     /**
      * Interesting thoughts here - sorting could be the concern of a Repository class but not all strategies would require
      * ordered inputs. For this strategy, we do need ordered inputs. So, we'll sort here.
-     * @param BreakPointCollection $breakPointCollection
+     * @param TermBreakPointCollectionInterface $breakPointCollection
      * @return int[]
      */
     private function orderBreakPointsByKeys(TermBreakPointCollectionInterface $breakPointCollection): array
