@@ -26,11 +26,11 @@ class FeeCalculatorController
      */
     public function getFeeForAmountAndTerm(string $amount, string $term): string
     {
-        if (!$amount || !is_numeric($amount)) {
+        if (!$amount) {
             throw new \Exception("You must provide an amount" . PHP_EOL);
         }
 
-        if (!$term || !is_numeric($term)) {
+        if (!$term) {
             throw new \Exception("You must provide a term" . PHP_EOL);
         }
 

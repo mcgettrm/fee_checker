@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Lendable\Interview\Services;
 
-use Lendable\Interview\Repositories\FeeStructureRepositoryInterface;
+use Lendable\Interview\Repositories\BreakPointRepositoryInterface;
 use Lendable\Interview\Utils\FeeStructureTermEnum;
 
 class FeeCalculatorService
 {
-    public function __construct(private readonly FeeStructureRepositoryInterface $feeStructureHardCodedRepository)
+    public function __construct(private readonly BreakPointRepositoryInterface $feeStructureHardCodedRepository)
     {
     }
 

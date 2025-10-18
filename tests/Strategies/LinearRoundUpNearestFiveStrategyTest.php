@@ -2,22 +2,38 @@
 
 declare(strict_types=1);
 
-namespace Lendable\Interview\Tests\Strategy;
+namespace Lendable\Interview\Tests\Strategies;
 
-use Lendable\Interview\DomainObjects\TermBreakPointCollectionTwelve;
-use Lendable\Interview\DomainObjects\TermBreakPointCollectionTwentyFour;
+use Lendable\Interview\DomainObjects\TermBreakPointCollectionInterface;
+use Lendable\Interview\Factories\DefaultFeeStructureFactory;
+use Lendable\Interview\Repositories\BreakPointHardCodedRepository;
 use Lendable\Interview\Strategies\LinearRoundUpNearestFiveStrategy;
+use Lendable\Interview\Utils\FeeStructureTermEnum;
 use PHPUnit\Framework\TestCase;
 
 class LinearRoundUpNearestFiveStrategyTest extends TestCase
 {
+
+
+    private TermBreakPointCollectionInterface $breakPoints24;
+    private TermBreakPointCollectionInterface $breakPoints12;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $breakPointRepository = new BreakPointHardCodedRepository(new DefaultFeeStructureFactory());
+        $this->breakPoints24 = $breakPointRepository->getBreakpointMappingForTerm(
+            FeeStructureTermEnum::TwentyFourMonth
+        );
+        $this->breakPoints12 = $breakPointRepository->getBreakpointMappingForTerm(FeeStructureTermEnum::TwelveMonth);
+    }
+
     public function testFeeReturnsOnBreakpoint(): void
     {
         $loanAmount = 100000;
         $expectedFee = 7000;
-        $termBreakpoints = new TermBreakPointCollectionTwentyFour();
         $strategy = new LinearRoundUpNearestFiveStrategy();
-        $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $termBreakpoints);
+        $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $this->breakPoints24);
         $this->assertEquals(
             $expectedFee,
             $actualFee,
@@ -29,9 +45,8 @@ class LinearRoundUpNearestFiveStrategyTest extends TestCase
     {
         $loanAmount = 1150000;
         $expectedFee = 46000;
-        $termBreakpoints = new TermBreakPointCollectionTwentyFour();
         $strategy = new LinearRoundUpNearestFiveStrategy();
-        $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $termBreakpoints);
+        $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $this->breakPoints24);
         $this->assertEquals(
             $expectedFee,
             $actualFee,
@@ -43,9 +58,8 @@ class LinearRoundUpNearestFiveStrategyTest extends TestCase
     {
         $loanAmount = 150000;
         $expectedFee = 8500;
-        $termBreakpoints = new TermBreakPointCollectionTwentyFour();
         $strategy = new LinearRoundUpNearestFiveStrategy();
-        $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $termBreakpoints);
+        $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $this->breakPoints24);
         $this->assertEquals(
             $expectedFee,
             $actualFee,
@@ -57,9 +71,8 @@ class LinearRoundUpNearestFiveStrategyTest extends TestCase
     {
         $loanAmount = 140000;
         $expectedFee = 8500;
-        $termBreakpoints = new TermBreakPointCollectionTwentyFour();
         $strategy = new LinearRoundUpNearestFiveStrategy();
-        $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $termBreakpoints);
+        $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $this->breakPoints24);
         $this->assertEquals(
             $expectedFee,
             $actualFee,
@@ -71,9 +84,8 @@ class LinearRoundUpNearestFiveStrategyTest extends TestCase
     {
         $loanAmount = 130000;
         $expectedFee = 8000;
-        $termBreakpoints = new TermBreakPointCollectionTwentyFour();
         $strategy = new LinearRoundUpNearestFiveStrategy();
-        $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $termBreakpoints);
+        $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $this->breakPoints24);
         $this->assertEquals(
             $expectedFee,
             $actualFee,
@@ -85,9 +97,8 @@ class LinearRoundUpNearestFiveStrategyTest extends TestCase
     {
         $loanAmount = 1925000;
         $expectedFee = 38500;
-        $termBreakpoints = new TermBreakPointCollectionTwelve();
         $strategy = new LinearRoundUpNearestFiveStrategy();
-        $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $termBreakpoints);
+        $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $this->breakPoints12);
         $this->assertEquals(
             $expectedFee,
             $actualFee,

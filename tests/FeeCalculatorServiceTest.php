@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Lendable\Interview\Tests;
 
 use Lendable\Interview\DomainObjects\FeeStructureInterface;
-use Lendable\Interview\Repositories\FeeStructureRepositoryInterface;
+use Lendable\Interview\Repositories\BreakPointRepositoryInterface;
 use Lendable\Interview\Services\FeeCalculatorService;
 use Lendable\Interview\Utils\FeeStructureTermEnum;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -14,12 +14,12 @@ use PHPUnit\Framework\TestCase;
 class FeeCalculatorServiceTest extends TestCase
 {
     private FeeCalculatorService $feeCalculatorService;
-    private FeeStructureRepositoryInterface&MockObject $feeStructureRepository;
+    private BreakPointRepositoryInterface&MockObject $feeStructureRepository;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->feeStructureRepository = $this->createMock(FeeStructureRepositoryInterface::class);
+        $this->feeStructureRepository = $this->createMock(BreakPointRepositoryInterface::class);
         $this->feeCalculatorService = new FeeCalculatorService($this->feeStructureRepository);
     }
 

@@ -1,5 +1,23 @@
 # Fee Checker
 
+## Intro
+
+Hi Lendable!
+
+I have thoroughly enjoyed completing this test for you. It has been a great mix of architectural challenges, some
+algorithmic complexity and awareness of PHP quirks.
+
+Throughout the test, I have attempted to slightly overengineer the solution in order to demonstrate knowledge of some
+common design patterns, hexagonal architecture, SOLID principles, DDD and clean code. I wrote much of the code using TDD
+due to the high amount of precision in the requirements document - which was great fun!
+
+I started with an "integration" test around the `calculate-fee` endpoint but eventually moved the functionality into
+classes and the application structure that you can see. Then, I added unit tests as I fleshed out certain classes.
+
+I hope you enjoy
+
+You will find a PNG of a conceptual overview of the solution here in the docs folder.
+
 ## Project Dependencies
 
 - You must have docker desktop installed
@@ -16,10 +34,7 @@ In the root of the project directory, run:
 ## Development
 
 `docker compose up -d --build` <-- Force rebuild
-
-## Some Decisions Tradeoffs
-
-- A bit uneasy about the use of concrete classes for storing the breakpoint sets
+`composer qa` <-- from within the project root when SSHd into the container. Runs phpstan and phpunit tests.
 
 ## Extensibility
 
@@ -35,12 +50,19 @@ In the root of the project directory, run:
 - The `FeeStructureRepositoryInterface` protects the domain layer from knowledge of its persistence. This could be
   reimplemented to load data from a database instead of from the filesystem (which is effectively what I have done with
   the two BreakPoint classes).
+- Dependencies can be injected in the `calculate-fee` binary, allowing, for example, different FeeStructureFactory
+  implementations to be provided, allowing different strategies to be injected.
 
 ## Further Development
 
-Given more time I would
+Given more time I would:
 
 - Import a dependency injection container with autowiring etc etc
+- I might consider triggering the factory build method inside the service rather than in a repository. This kindof sits
+  outside the repository's area of concern.
+- I tend to find the `Service` name a bit generic, my services tend to follow the `facade` pattern; providing abstracted
+  access to a subsystem. I'd probably rename it.
+- Review the decision to handle all currencies in pence.
 
 ## TODO
 

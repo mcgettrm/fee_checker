@@ -9,10 +9,19 @@ use Traversable;
 
 abstract class AbstractTermBreakPointCollection implements TermBreakPointCollectionInterface
 {
+
     /**
      * @var array<int, int>
      */
     protected array $breakPoints = [];
+
+    /**
+     * @param array<int, int> $breakPoints
+     */
+    public function __construct(array $breakPoints)
+    {
+        $this->breakPoints = $breakPoints;
+    }
 
     public function getFeeAtBreakpoint(int $loanAmount): int|null
     {

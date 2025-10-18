@@ -15,7 +15,9 @@ $termString = $argv[2] ?? '';
 try {
     $feeCalculator = new \Lendable\Interview\Controllers\FeeCalculatorController(
             new \Lendable\Interview\Services\FeeCalculatorService(
-                    new \Lendable\Interview\Repositories\FeeStructureHardCodedRepository()
+                    new \Lendable\Interview\Repositories\BreakPointHardCodedRepository(
+                            new \Lendable\Interview\Factories\DefaultFeeStructureFactory()
+                    )
             ),
     );
     fwrite(STDOUT, "{$feeCalculator->getFeeForAmountAndTerm($amountString, $termString)}" . PHP_EOL);
