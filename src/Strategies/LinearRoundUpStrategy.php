@@ -34,14 +34,13 @@ class LinearRoundUpStrategy implements FeeResolutionStrategyInterface
         /** @var array<int, int> $orderedBreakPoints */
         foreach ($orderedBreakPoints as $currentLoanAmountBP => $currentFeeAmountBP) {
             if ($previousLoanAmountBP < $loanAmountPence && $loanAmountPence < $currentLoanAmountBP) {
-                return CurrencyUtilities::getMoneyFromPence(
-                    $this->roundingStrategy->round(
-                        $this->interpolationStrategy->calculateFeeBetweenBreakPoints(
-                            $previousFeeAmountBP,
-                            $this->getProgressionDecimal($previousLoanAmountBP, $loanAmountPence, $currentLoanAmountBP),
-                            $currentFeeAmountBP
-                        )
-                    )
+                //Found the bounds
+                return $this->interpolate(
+                    $previousFeeAmountBP,
+                    $currentFeeAmountBP,
+                    $previousLoanAmountBP,
+                    $currentLoanAmountBP,
+                    $loanAmountPence
                 );
             }
             $previousLoanAmountBP = $currentLoanAmountBP;
@@ -62,6 +61,19 @@ class LinearRoundUpStrategy implements FeeResolutionStrategyInterface
         $breakPointPairs = iterator_to_array($breakPointCollection);
         ksort($breakPointPairs, SORT_NUMERIC);
         return $breakPointPairs;
+    }
+
+    private function interpolate(int $lowerFee, int $upperFee, int $lowerLoan, int $upperLoan, int $targetLoan): Money
+    {
+        return CurrencyUtilities::getMoneyFromPence(
+            $this->roundingStrategy->round(
+                $this->interpolationStrategy->calculateFeeBetweenBreakPoints(
+                    $lowerFee,
+                    $this->getProgressionDecimal($lowerLoan, $targetLoan, $upperLoan),
+                    $upperFee
+                )
+            )
+        );
     }
 
     private function getProgressionDecimal(
