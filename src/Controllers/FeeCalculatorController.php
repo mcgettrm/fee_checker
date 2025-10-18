@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Lendable\Interview;
+namespace Lendable\Interview\Controllers;
 
+use Lendable\Interview\Services\FeeCalculatorService;
 use Lendable\Interview\Utils\CurrencyUtilities;
 use Lendable\Interview\Utils\FeeStructureTermEnum;
 
@@ -25,6 +26,14 @@ class FeeCalculatorController
      */
     public function getFeeForAmountAndTerm(string $amount, string $term): string
     {
+        if (!$amount || !is_numeric($amount)) {
+            throw new \Exception("You must provide an amount" . PHP_EOL);
+        }
+
+        if (!$term || !is_numeric($term)) {
+            throw new \Exception("You must provide a term" . PHP_EOL);
+        }
+
         $amountPence = CurrencyUtilities::convertStringToPence($amount);
         $termInt = (int)$term;
 

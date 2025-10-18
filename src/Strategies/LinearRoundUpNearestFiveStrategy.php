@@ -56,9 +56,9 @@ class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
         //How far off the next multiple of 5 is it?
         $remainder = ($baseFeePounds) % 5;
         if ($remainder === 0) {
-            return (int)$baseFeePence;
+            return $baseFeePence;
         } else {
-            return (int)$baseFeePence + ((5 - $remainder) * 100);
+            return $baseFeePence + ((5 - $remainder) * 100);
         }
     }
 

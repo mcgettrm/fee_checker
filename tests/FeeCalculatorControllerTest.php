@@ -2,8 +2,8 @@
 
 namespace Lendable\Interview\Tests;
 
-use Lendable\Interview\FeeCalculatorController;
-use Lendable\Interview\FeeCalculatorService;
+use Lendable\Interview\Controllers\FeeCalculatorController;
+use Lendable\Interview\Services\FeeCalculatorService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

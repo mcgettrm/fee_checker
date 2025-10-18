@@ -18,6 +18,7 @@
   },
   "scripts": {
     "test": "phpunit",
-    "analyse": "phpstan analyse"
+    "analyse": "phpstan analyse",
+    "qa": "phpunit && phpstan analyse"
   }
 }

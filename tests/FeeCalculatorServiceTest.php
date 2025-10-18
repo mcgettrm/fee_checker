@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Lendable\Interview\Tests;
 
 use Lendable\Interview\DomainObjects\FeeStructureInterface;
-use Lendable\Interview\FeeCalculatorService;
 use Lendable\Interview\Repositories\FeeStructureRepositoryInterface;
+use Lendable\Interview\Services\FeeCalculatorService;
 use Lendable\Interview\Utils\FeeStructureTermEnum;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

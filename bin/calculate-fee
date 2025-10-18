@@ -13,16 +13,8 @@ $amountString = $argv[1] ?? '';
 $termString = $argv[2] ?? '';
 
 try {
-    if (!$amountString) {
-        throw new \Exception("You must provide an amount" . PHP_EOL);
-    }
-
-    if (!$termString) {
-        throw new \Exception("You must provide a term" . PHP_EOL);
-    }
-
-    $feeCalculator = new \Lendable\Interview\FeeCalculatorController(
-            new \Lendable\Interview\FeeCalculatorService(
+    $feeCalculator = new \Lendable\Interview\Controllers\FeeCalculatorController(
+            new \Lendable\Interview\Services\FeeCalculatorService(
                     new \Lendable\Interview\Repositories\FeeStructureHardCodedRepository()
             ),
     );
