@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Lendable\Interview\Tests\Strategies;
 
 use Lendable\Interview\Strategies\RoundUpToStrategy;
@@ -34,5 +36,11 @@ class RoundUpStrategyTest extends TestCase
     {
         $this->assertEquals(2500, $this->strategy->round(2100));
     }
-    
+
+    public function testRoundsUpToTenIfToldToDoSo(): void
+    {
+        $strategy = new RoundUpToStrategy(10);
+        $this->assertEquals(3000, $strategy->round(2100));
+    }
+
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Lendable\Interview\Tests\Strategies;
 
 use Lendable\Interview\DomainObjects\TermBreakPointCollectionInterface;
-use Lendable\Interview\Factories\DefaultFeeStructureFactory;
 use Lendable\Interview\Repositories\BreakPointHardCodedRepository;
 use Lendable\Interview\Strategies\LinearRoundUpStrategy;
 use Lendable\Interview\Strategies\LinearStrategy;
@@ -17,8 +16,6 @@ use PHPUnit\Framework\TestCase;
 
 class LinearRoundUpStrategyTest extends TestCase
 {
-
-
     private TermBreakPointCollectionInterface $breakPoints24;
     private TermBreakPointCollectionInterface $breakPoints12;
 
@@ -27,7 +24,7 @@ class LinearRoundUpStrategyTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $breakPointRepository = new BreakPointHardCodedRepository(new DefaultFeeStructureFactory());
+        $breakPointRepository = new BreakPointHardCodedRepository();
         $this->breakPoints24 = $breakPointRepository->getBreakpointMappingForTerm(
             FeeStructureTermEnum::TwentyFourMonth
         );

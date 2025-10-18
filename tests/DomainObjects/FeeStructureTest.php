@@ -6,7 +6,6 @@ namespace Lendable\Interview\Tests\DomainObjects;
 
 use Lendable\Interview\DomainObjects\FeeStructure;
 use Lendable\Interview\DomainObjects\TermBreakPointCollectionInterface;
-use Lendable\Interview\Factories\DefaultFeeStructureFactory;
 use Lendable\Interview\Repositories\BreakPointHardCodedRepository;
 use Lendable\Interview\Strategies\FeeResolutionStrategyInterface;
 use Lendable\Interview\Strategies\LinearRoundUpStrategy;
@@ -25,7 +24,7 @@ class FeeStructureTest extends TestCase
     {
         parent::setUp();
 
-        $breakPointRepository = new BreakPointHardCodedRepository(new DefaultFeeStructureFactory());
+        $breakPointRepository = new BreakPointHardCodedRepository();
         $this->breakPoints24 = $breakPointRepository->getBreakpointMappingForTerm(
             FeeStructureTermEnum::TwentyFourMonth
         );
