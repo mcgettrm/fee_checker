@@ -26,7 +26,7 @@ class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
         /** @var array<int, int> $orderedBreakPoints */
         foreach ($orderedBreakPoints as $currentLoanAmountBP => $currentFeeAmountBP) {
             if ($lastLoanAmountBP < $loanAmountPence && $loanAmountPence < $currentLoanAmountBP) {
-                //Because the breakpoint gaps aren't regular, we need to be a bit careful here
+                //Because the breakpoint gaps aren't necessarily regular, we need to be a bit careful here
                 return CurrencyUtilities::getMoneyFromPence(
                     $this->calculateLinearFeeBetweenBreakPoints(
                         $lastFeeAmountBP,
@@ -88,7 +88,6 @@ class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
     ): float {
         $gapValue = $higherBreakpoint - $lowerBreakpoint;
         $gapProgression = $loanAmount - $lowerBreakpoint;
-        //What is the progression as a percentage of the gap?
         return $gapProgression / $gapValue;
     }
 }

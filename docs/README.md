@@ -84,13 +84,10 @@ Given more time I would:
   could be provided if I made specific exception classes.
 - Consider whether Exceptions should be caught in the controller and responses boiled down into some kind of response
   object? <-- This feels like a good idea
-
-## TODO
-
-- Special exception types?
-- Some way to stop the stdErr from outputting when runing phpunit?
-- Introduce a dependency injection container?
-- What if the mappings aren't ordered?
+- I would probably change the value object library to https://github.com/moneyphp/money and enable `BCMath` extension -
+  it seems to have better support for mathematical operations which would benefit the strategy patterns well. For now, I
+  think there is value in using a value object to form the contracts between classes rather than just passing around
+  integers.
 
 ## Requirements (Short)
 
