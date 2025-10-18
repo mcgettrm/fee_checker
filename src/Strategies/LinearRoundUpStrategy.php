@@ -28,25 +28,30 @@ class LinearRoundUpStrategy implements FeeResolutionStrategyInterface
 
         $loanAmountPence = $loanAmount->getAmount();
         $orderedBreakPoints = $this->orderBreakPointsByKeys($breakPointCollection);
-        $previousLoanAmountBP = 0;
-        $previousFeeAmountBP = 0;
 
-        /** @var array<int, int> $orderedBreakPoints */
-        foreach ($orderedBreakPoints as $currentLoanAmountBP => $currentFeeAmountBP) {
-            if ($previousLoanAmountBP < $loanAmountPence && $loanAmountPence < $currentLoanAmountBP) {
-                //Found the bounds
-                return $this->interpolate(
-                    $previousFeeAmountBP,
-                    $currentFeeAmountBP,
-                    $previousLoanAmountBP,
-                    $currentLoanAmountBP,
-                    $loanAmountPence
-                );
-            }
-            $previousLoanAmountBP = $currentLoanAmountBP;
-            $previousFeeAmountBP = $currentFeeAmountBP;
+        $loanBoundaries = $this->binarySearch($loanAmountPence, array_keys($orderedBreakPoints));
+        $lowerLoanAmount = $loanBoundaries[0];
+        $upperLoanAmount = $loanBoundaries[1];
+
+        if (!array_key_exists($upperLoanAmount, $orderedBreakPoints) || !array_key_exists(
+                $lowerLoanAmount,
+                $orderedBreakPoints
+            )) {
+            throw new \Exception("Could not identify a fee for the supposed breakpoint at: $lowerLoanAmount ");
         }
-        throw new \Exception('No valid loan amount found for amount: ' . $loanAmountPence);
+        if ($lowerLoanAmount === $upperLoanAmount) {
+            //It's actually on a breakpoint, return that breakpoint's value
+            return CurrencyUtilities::getMoneyFromPence($orderedBreakPoints[$lowerLoanAmount]);
+        }
+
+        //Found the bounds
+        return $this->interpolate(
+            $orderedBreakPoints[$lowerLoanAmount],
+            $orderedBreakPoints[$upperLoanAmount],
+            $lowerLoanAmount,
+            $upperLoanAmount,
+            $loanAmountPence
+        );
     }
 
     /**
@@ -61,6 +66,56 @@ class LinearRoundUpStrategy implements FeeResolutionStrategyInterface
         $breakPointPairs = iterator_to_array($breakPointCollection);
         ksort($breakPointPairs, SORT_NUMERIC);
         return $breakPointPairs;
+    }
+
+    /**
+     * Could consider making this injectable
+     * @param int $target
+     * @param array<int, int> $loanValues
+     * @return array<int, int>
+     * @throws \Exception
+     */
+    private function binarySearch(int $target, array $loanValues): array
+    {
+        //LowerBound and UpperBound
+        $returnArray = [];
+        $lowerIndex = 0;
+        $upperIndex = count($loanValues) - 1;
+        while ($lowerIndex < $upperIndex) {
+            //Note we don't need to account for finding values that are directly on the boundaries as this has already been checked by the caller
+            //We know the value we are looking for does not sit on one of the indexes directly.
+
+            //Get the middle key
+            $middleIndex = intdiv($lowerIndex + $upperIndex, 2);
+            //Is the index lower or higher?
+            $middleIndexValue = $loanValues[$middleIndex];
+
+            $upperNeighbourValue = $loanValues[$middleIndex + 1];
+            $lowerNeighbourValue = $loanValues[$middleIndex - 1];
+
+            if ($middleIndexValue < $target && $upperNeighbourValue > $target) {
+                //We found our bounds
+                $returnArray[0] = $middleIndexValue;
+                $returnArray[1] = $upperNeighbourValue;
+                return $returnArray;
+            } else {
+                if ($lowerNeighbourValue < $target && $middleIndexValue > $target) {
+                    //We found our bounds
+                    $returnArray[0] = $lowerNeighbourValue;
+                    $returnArray[1] = $middleIndexValue;
+                    return $returnArray;
+                } else {
+                    if ($middleIndexValue > $target) {
+                        //Throw away the top half of the array
+                        $upperIndex = $middleIndex;
+                    } else {
+                        //Throw away the bottom half of the array
+                        $lowerIndex = $middleIndex;
+                    }
+                }
+            }
+        }
+        throw new \Exception('No fee could be found.');
     }
 
     private function interpolate(int $lowerFee, int $upperFee, int $lowerLoan, int $upperLoan, int $targetLoan): Money

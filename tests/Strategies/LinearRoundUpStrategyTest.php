@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Lendable\Interview\Tests\Strategies;
 
+use Lendable\Interview\DomainObjects\BreakPointCollection;
 use Lendable\Interview\DomainObjects\TermBreakPointCollectionInterface;
 use Lendable\Interview\Repositories\BreakPointHardCodedRepository;
 use Lendable\Interview\Strategies\LinearRoundUpStrategy;
@@ -131,6 +132,68 @@ class LinearRoundUpStrategyTest extends TestCase
             'The strategy should the breakpoints prior to running its algorithm'
         );
     }
+
+    public function testBinarySearchReturnsLowerNeighbour(): void
+    {
+        //£2,500
+        $loanAmount = CurrencyUtilities::getMoneyFromPence(250000);
+        //£25
+        $expectedFee = 2500;
+        $unorderedBreakPointCollection = new BreakPointCollection([
+            100000 => 1000,
+            200000 => 2000,
+            300000 => 3000,
+            400000 => 4000,
+            500000 => 5000,
+        ]);
+        $actualFee = $this->strategy->calculateFeeForLoanAmount($loanAmount, $unorderedBreakPointCollection);
+        $this->assertEquals(
+            $expectedFee,
+            $actualFee->getAmount(),
+        );
+    }
+
+    public function testBinarySearchReturnsUpperNeighbour(): void
+    {
+        //£3,500
+        $loanAmount = CurrencyUtilities::getMoneyFromPence(350000);
+        //£35
+        $expectedFee = 3500;
+        $unorderedBreakPointCollection = new BreakPointCollection([
+            100000 => 1000,
+            200000 => 2000,
+            300000 => 3000,
+            400000 => 4000,
+            500000 => 5000,
+        ]);
+        $actualFee = $this->strategy->calculateFeeForLoanAmount($loanAmount, $unorderedBreakPointCollection);
+        $this->assertEquals(
+            $expectedFee,
+            $actualFee->getAmount(),
+        );
+    }
+
+    public function testBinarySearchHandlesEvenArrayLength(): void
+    {
+        //£3,500
+        $loanAmount = CurrencyUtilities::getMoneyFromPence(350000);
+        //£35
+        $expectedFee = 3500;
+        $unorderedBreakPointCollection = new BreakPointCollection([
+            100000 => 1000,
+            200000 => 2000,
+            300000 => 3000,
+            400000 => 4000,
+            500000 => 5000,
+            600000 => 6000,
+        ]);
+        $actualFee = $this->strategy->calculateFeeForLoanAmount($loanAmount, $unorderedBreakPointCollection);
+        $this->assertEquals(
+            $expectedFee,
+            $actualFee->getAmount(),
+        );
+    }
+
 
     public function testZeroFeeBreakPointReturns(): void
     {
