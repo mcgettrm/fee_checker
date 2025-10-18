@@ -73,11 +73,8 @@ In the root of the project directory, run:
 Given more time I would:
 
 - Import a dependency injection container with autowiring etc etc
-- I might consider triggering the factory build method inside the service rather than in a repository. This kindof sits
-  outside the repository's area of concern.
 - I tend to find the `Service` name a bit generic, my services tend to follow the `facade` pattern; providing abstracted
   access to a subsystem. I'd probably rename it.
-- Review the decision to handle all currencies in pence.
 - I think some kind of "View" would be useful even though we are currently just outputting scalar responses. I feel that
   the `CurrencyUtilities` class may be taking on some of the responsibilities of a view.
 - More detailed `Exceptions`. I am currently just using generic exception classes but more granularity and specificity
@@ -88,10 +85,7 @@ Given more time I would:
   it seems to have better support for mathematical operations which would benefit the strategy patterns well. For now, I
   think there is value in using a value object to form the contracts between classes rather than just passing around
   integers.
-- The strategy itself has too many concerns. I would think this could be more composable.
-    - Round up strategy with optional integer
-    - Linear fee inference between breakpoints strategy
-- I might implement a builder pattern for the strategy so that we can compose "Linear" with "RoundUpTo" or "RoundDownTo"
+- The linear interpolation strategy could have its binary search method dependency injected
 
 ## Requirements (Short)
 
