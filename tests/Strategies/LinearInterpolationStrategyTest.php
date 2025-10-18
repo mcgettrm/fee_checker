@@ -5,8 +5,6 @@ namespace Lendable\Interview\Tests\Strategies;
 use Lendable\Interview\Strategies\LinearStrategy;
 use PHPUnit\Framework\TestCase;
 
-use function PHPUnit\Framework\assertEquals;
-
 class LinearInterpolationStrategyTest extends TestCase
 {
     private LinearStrategy $strategy;
@@ -17,18 +15,24 @@ class LinearInterpolationStrategyTest extends TestCase
         $this->strategy = new LinearStrategy();
     }
 
-    public function testLinearInterpolationSuccessfullyIdentifiesMidpoint()
+    public function testLinearInterpolationSuccessfullyIdentifiesMidpoint(): void
     {
-        assertEquals(150000, $this->strategy->calculateFeeBetweenBreakPoints(100000, 0.5, 200000));
+        $this->assertEquals(150000, $this->strategy->calculateFeeBetweenBreakPoints(100000, 0.5, 200000));
     }
 
-    public function testLinearInterpolationSuccessfullyIdentifiesUpperBound()
+    public function testLinearInterpolationSuccessfullyIdentifiesUpperBound(): void
     {
-        assertEquals(200000, $this->strategy->calculateFeeBetweenBreakPoints(100000, 1, 200000));
+        $this->assertEquals(200000, $this->strategy->calculateFeeBetweenBreakPoints(100000, 1, 200000));
     }
 
-    public function testLinearInterpolationSuccessfullyIdentifiesLowerBound()
+    public function testLinearInterpolationSuccessfullyIdentifiesLowerBound(): void
     {
-        assertEquals(100000, $this->strategy->calculateFeeBetweenBreakPoints(100000, 0, 200000));
+        $this->assertEquals(100000, $this->strategy->calculateFeeBetweenBreakPoints(100000, 0, 200000));
+    }
+
+    public function testLinearInterpolationThrowsErrorOnNegativeProgression(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->strategy->calculateFeeBetweenBreakPoints(100000, -0.5, 200000);
     }
 }
