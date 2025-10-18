@@ -88,6 +88,10 @@ Given more time I would:
   it seems to have better support for mathematical operations which would benefit the strategy patterns well. For now, I
   think there is value in using a value object to form the contracts between classes rather than just passing around
   integers.
+- The strategy itself has too many concerns. I would think this could be more composable.
+    - Round up strategy with optional integer
+    - Linear fee inference between breakpoints strategy
+- I might implement a builder pattern for the strategy so that we can compose "Linear" with "RoundUpTo" or "RoundDownTo"
 
 ## Requirements (Short)
 

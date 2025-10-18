@@ -6,7 +6,7 @@ namespace Lendable\Interview\Factories;
 
 use Lendable\Interview\DomainObjects\FeeStructure;
 use Lendable\Interview\DomainObjects\TermBreakPointCollectionInterface;
-use Lendable\Interview\Strategies\LinearRoundUpNearestFiveStrategy;
+use Lendable\Interview\Strategies\LinearRoundUpStrategy;
 use Lendable\Interview\Utils\FeeStructureTermEnum;
 
 class DefaultFeeStructureFactory implements FeeStructureFactoryInterface
@@ -15,6 +15,6 @@ class DefaultFeeStructureFactory implements FeeStructureFactoryInterface
         FeeStructureTermEnum $term,
         TermBreakPointCollectionInterface $breakpoints
     ): FeeStructure {
-        return new FeeStructure($term, $breakpoints, new LinearRoundUpNearestFiveStrategy());
+        return new FeeStructure($term, $breakpoints, new LinearRoundUpStrategy());
     }
 }

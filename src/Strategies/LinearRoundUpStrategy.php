@@ -8,13 +8,18 @@ use Lendable\Interview\DomainObjects\TermBreakPointCollectionInterface;
 use Lendable\Interview\Utils\CurrencyUtilities;
 use Money\Money;
 
-class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
+class LinearRoundUpStrategy implements FeeResolutionStrategyInterface
 {
+    public function __construct(private int $roundUpToValue = 5)
+    {
+    }
+
     public function calculateFeeForLoanAmount(
         Money $loanAmount,
         TermBreakPointCollectionInterface $breakPointCollection
     ): Money {
-        if ($fee = $breakPointCollection->getFeeAtBreakpoint($loanAmount->getAmount())) {
+        $fee = $breakPointCollection->getFeeAtBreakpoint($loanAmount->getAmount());
+        if (!is_null($fee)) {
             return CurrencyUtilities::getMoneyFromPence($fee);
         }
 
@@ -26,7 +31,6 @@ class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
         /** @var array<int, int> $orderedBreakPoints */
         foreach ($orderedBreakPoints as $currentLoanAmountBP => $currentFeeAmountBP) {
             if ($lastLoanAmountBP < $loanAmountPence && $loanAmountPence < $currentLoanAmountBP) {
-                //Because the breakpoint gaps aren't necessarily regular, we need to be a bit careful here
                 return CurrencyUtilities::getMoneyFromPence(
                     $this->calculateLinearFeeBetweenBreakPoints(
                         $lastFeeAmountBP,
@@ -73,7 +77,7 @@ class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
     {
         //Implicitly creates a float
         $baseFeePounds = $baseFeePence / 100;
-        $roundedUp = ceil($baseFeePounds / 5) * 5;
+        $roundedUp = ceil($baseFeePounds / $this->roundUpToValue) * $this->roundUpToValue;
 
         //Convert back to pence
         return (int)round($roundedUp * 100);

@@ -9,7 +9,7 @@ use Lendable\Interview\DomainObjects\TermBreakPointCollectionInterface;
 use Lendable\Interview\Factories\DefaultFeeStructureFactory;
 use Lendable\Interview\Repositories\BreakPointHardCodedRepository;
 use Lendable\Interview\Strategies\FeeResolutionStrategyInterface;
-use Lendable\Interview\Strategies\LinearRoundUpNearestFiveStrategy;
+use Lendable\Interview\Strategies\LinearRoundUpStrategy;
 use Lendable\Interview\Utils\CurrencyUtilities;
 use Lendable\Interview\Utils\FeeStructureTermEnum;
 use PHPUnit\Framework\TestCase;
@@ -37,7 +37,7 @@ class FeeStructureTest extends TestCase
         $feeStructure = new FeeStructure(
             FeeStructureTermEnum::TwentyFourMonth,
             $this->breakPoints24,
-            new LinearRoundUpNearestFiveStrategy()
+            new LinearRoundUpStrategy()
         );
         $actualFee = $feeStructure->getFeeForLoanAmount($loanAmount);
         $this->assertEquals(
