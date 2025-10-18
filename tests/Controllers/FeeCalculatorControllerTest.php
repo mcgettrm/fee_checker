@@ -52,4 +52,17 @@ class FeeCalculatorControllerTest extends TestCase
             ->willReturn(CurrencyUtilities::getMoneyFromPence(1000));
         $this->controller->getFeeForAmountAndTerm($amount, $term);
     }
+
+    public function testNoExceptionWithValidInputs(): void
+    {
+        $loanAmount = '19,250.00';
+        $term = '24';
+        $fakeFee = CurrencyUtilities::getMoneyFromPence(38500);
+
+        $this->feeCalculatorService->expects($this->once())->method('calculate')->willReturn($fakeFee);
+
+        //TODO::Mock Service and return values
+        $fee = $this->controller->getFeeForAmountAndTerm($loanAmount, $term);
+        $this->assertEquals('385.00', $fee);
+    }
 }

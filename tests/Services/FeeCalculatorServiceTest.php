@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Lendable\Interview\Tests;
+namespace Lendable\Interview\Tests\Services;
 
 use Lendable\Interview\DomainObjects\FeeStructureInterface;
 use Lendable\Interview\Repositories\BreakPointRepositoryInterface;
