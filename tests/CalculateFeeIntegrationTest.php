@@ -135,4 +135,21 @@ class CalculateFeeIntegrationTest extends TestCase
             'Only term limits of 12 and 24 are valid. Per the docs, we can assume all inputs will be of these term limits'
         );
     }
+
+    /**
+     * This test caught an issue where the use of modulo implicitly reduced precision
+     * @return void
+     */
+    public function testInputHandlesPence(): void
+    {
+        $loanAmount = '1,300.56';
+        $term = '12';
+        exec("php {$this->binaryLocation} {$loanAmount} {$term}", $output, $exitCode);
+        $this->assertEquals(
+            0,
+            $exitCode,
+            'Input must handle pence'
+        );
+        $this->assertEquals('65.00', implode($output), 'The output should only show 65.00');
+    }
 }

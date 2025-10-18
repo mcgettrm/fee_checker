@@ -71,14 +71,12 @@ class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
 
     private function applyRoundUpNearestFive(int $baseFeePence): int
     {
+        //Implicitly creates a float
         $baseFeePounds = $baseFeePence / 100;
-        //How far off the next multiple of 5 is it?
-        $remainder = ($baseFeePounds) % 5;
-        if ($remainder === 0) {
-            return $baseFeePence;
-        } else {
-            return $baseFeePence + ((5 - $remainder) * 100);
-        }
+        $roundedUp = ceil($baseFeePounds / 5) * 5;
+
+        //Convert back to pence
+        return (int)round($roundedUp * 100);
     }
 
     private function getProgressionDecimal(

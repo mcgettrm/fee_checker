@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Lendable\Interview\Tests\Fixtures;
 
 use Lendable\Interview\DomainObjects\AbstractTermBreakPointCollection;

@@ -108,6 +108,13 @@ class LinearRoundUpNearestFiveStrategyTest extends TestCase
         );
     }
 
+    /**
+     * This test caught an issue where progression ratios were being rounded up to the nearest 2 dp and precision was lost
+     * Testing with a linear breakpoint/fee structure is useful for testing the behavior of the algorithm as it is easy to
+     * reason about the expected outputs of a given input
+     * @return void
+     * @throws \Exception
+     */
     public function testUnorderedBreakPointsDoNotCauseException(): void
     {
         //£18,000
