@@ -7,6 +7,7 @@ namespace Lendable\Interview\Tests;
 use Lendable\Interview\DomainObjects\FeeStructureInterface;
 use Lendable\Interview\Repositories\BreakPointRepositoryInterface;
 use Lendable\Interview\Services\FeeCalculatorService;
+use Lendable\Interview\Utils\CurrencyUtilities;
 use Lendable\Interview\Utils\FeeStructureTermEnum;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -26,11 +27,11 @@ class FeeCalculatorServiceTest extends TestCase
     public function testServiceLoadsRequestedFeeStructureFromRepository(): void
     {
         $term = 24;
-        $amount = 100000;
+        $amount = CurrencyUtilities::getMoneyFromPence(100000);
 
         $mockFeeStructure = $this->createMock(FeeStructureInterface::class);
 
-        $fakeCalculatedFee = 100;
+        $fakeCalculatedFee = CurrencyUtilities::getMoneyFromPence(10000);
 
         $this->feeStructureRepository
             ->expects($this->once())
@@ -45,7 +46,7 @@ class FeeCalculatorServiceTest extends TestCase
 
         $result = $this->feeCalculatorService->calculate($amount, $term);
 
-        //Asser the it returns the value that the feeStructure settled on
-        $this->assertEquals($fakeCalculatedFee, $result);
+        //Assert thT it returns the value that the feeStructure settled on
+        $this->assertEquals($fakeCalculatedFee->getAmount(), $result->getAmount());
     }
 }

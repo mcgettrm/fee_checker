@@ -6,6 +6,7 @@ namespace Lendable\Interview\Services;
 
 use Lendable\Interview\Repositories\BreakPointRepositoryInterface;
 use Lendable\Interview\Utils\FeeStructureTermEnum;
+use Money\Money;
 
 class FeeCalculatorService
 {
@@ -15,12 +16,12 @@ class FeeCalculatorService
 
     /**
      * Load the correct fee structure, run the calculation
-     * @param int $amount
+     * @param Money $amount
      * @param int $term
-     * @return int
+     * @return Money
      * @throws \Exception
      */
-    public function calculate(int $amount, int $term): int
+    public function calculate(Money $amount, int $term): Money
     {
         $enumEntry = FeeStructureTermEnum::tryFrom($term);
         if ($enumEntry === null) {

@@ -4,6 +4,7 @@ namespace Lendable\Interview\Tests;
 
 use Lendable\Interview\Controllers\FeeCalculatorController;
 use Lendable\Interview\Services\FeeCalculatorService;
+use Lendable\Interview\Utils\CurrencyUtilities;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -32,7 +33,7 @@ class FeeCalculatorControllerTest extends TestCase
     {
         $loanAmount = '19,250.00';
         $term = '24';
-        $fakeFee = 38500;
+        $fakeFee = CurrencyUtilities::getMoneyFromPence(38500);
 
         $this->feeCalculatorService->expects($this->once())->method('calculate')->willReturn($fakeFee);
 

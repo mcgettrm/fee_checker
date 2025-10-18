@@ -4,8 +4,64 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c4b89e947b155e05a9d1a019927b25a4",
-    "packages": [],
+    "content-hash": "2117489d526319d6556cb9e49ad2dd54",
+    "packages": [
+        {
+            "name": "rebilly/money",
+            "version": "v2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Rebilly/money.git",
+                "reference": "f9c6193ee1c0f889d8e22038cdb79c801afe2267"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Rebilly/money/zipball/f9c6193ee1c0f889d8e22038cdb79c801afe2267",
+                "reference": "f9c6193ee1c0f889d8e22038cdb79c801afe2267",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.4",
+                "phpunit/phpunit": "^9.5",
+                "psalm/plugin-phpunit": "^0.16.1",
+                "vimeo/psalm": "^4.20"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Money\\": [
+                        "src"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rebilly",
+                    "homepage": "https://github.com/rebilly"
+                }
+            ],
+            "description": "Implementation of the Money Value Object",
+            "homepage": "https://github.com/rebilly/money/",
+            "keywords": [
+                "currency",
+                "money"
+            ],
+            "support": {
+                "issues": "https://github.com/Rebilly/money/issues",
+                "source": "https://github.com/Rebilly/money/tree/v2.4.0"
+            },
+            "time": "2025-04-16T17:47:30+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "myclabs/deep-copy",

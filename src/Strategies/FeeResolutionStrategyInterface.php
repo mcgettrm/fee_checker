@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Lendable\Interview\Strategies;
 
 use Lendable\Interview\DomainObjects\TermBreakPointCollectionInterface;
+use Money\Money;
 
 interface FeeResolutionStrategyInterface
 {
     public function calculateFeeForLoanAmount(
-        int $loanAmount,
+        Money $loanAmount,
         TermBreakPointCollectionInterface $breakPointCollection
-    ): int;
+    ): Money;
 }

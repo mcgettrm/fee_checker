@@ -10,6 +10,7 @@ use Lendable\Interview\Factories\DefaultFeeStructureFactory;
 use Lendable\Interview\Repositories\BreakPointHardCodedRepository;
 use Lendable\Interview\Strategies\FeeResolutionStrategyInterface;
 use Lendable\Interview\Strategies\LinearRoundUpNearestFiveStrategy;
+use Lendable\Interview\Utils\CurrencyUtilities;
 use Lendable\Interview\Utils\FeeStructureTermEnum;
 use PHPUnit\Framework\TestCase;
 
@@ -31,7 +32,7 @@ class FeeStructureTest extends TestCase
 
     public function testFeeReturnsOnBreakpoint(): void
     {
-        $loanAmount = 100000;
+        $loanAmount = CurrencyUtilities::getMoneyFromPence(100000);
         $expectedFee = 7000;
         $feeStructure = new FeeStructure(
             FeeStructureTermEnum::TwentyFourMonth,
@@ -41,7 +42,7 @@ class FeeStructureTest extends TestCase
         $actualFee = $feeStructure->getFeeForLoanAmount($loanAmount);
         $this->assertEquals(
             $expectedFee,
-            $actualFee,
+            $actualFee->getAmount(),
             'The fee structure should return exactly the expected fee if the requested loan amount is present in the mapping'
         );
     }
@@ -49,8 +50,8 @@ class FeeStructureTest extends TestCase
     public function testFeeStructureConsultsStrategy(): void
     {
         //Not actually asserting on these values, but picking something sensible anyway
-        $loanAmount = 100000;
-        $expectedFee = 5000;
+        $loanAmount = CurrencyUtilities::getMoneyFromPence(100000);
+        $expectedFee = CurrencyUtilities::getMoneyFromPence(5000);
         $strategyMock = $this->createMock(FeeResolutionStrategyInterface::class);
         $feeStructure = new FeeStructure(
             FeeStructureTermEnum::TwentyFourMonth,

@@ -5,35 +5,40 @@ declare(strict_types=1);
 namespace Lendable\Interview\Strategies;
 
 use Lendable\Interview\DomainObjects\TermBreakPointCollectionInterface;
+use Lendable\Interview\Utils\CurrencyUtilities;
+use Money\Money;
 
 class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
 {
     public function calculateFeeForLoanAmount(
-        int $loanAmount,
+        Money $loanAmount,
         TermBreakPointCollectionInterface $breakPointCollection
-    ): int {
-        if ($fee = $breakPointCollection->getFeeAtBreakpoint($loanAmount)) {
-            return $fee;
+    ): Money {
+        if ($fee = $breakPointCollection->getFeeAtBreakpoint($loanAmount->getAmount())) {
+            return CurrencyUtilities::getMoneyFromPence($fee);
         }
 
+        $loanAmountPence = $loanAmount->getAmount();
         $orderedBreakPoints = $this->orderBreakPointsByKeys($breakPointCollection);
         $lastLoanAmountBP = 0;
         $lastFeeAmountBP = 0;
 
         /** @var array<int, int> $orderedBreakPoints */
         foreach ($orderedBreakPoints as $currentLoanAmountBP => $currentFeeAmountBP) {
-            if ($lastLoanAmountBP < $loanAmount && $loanAmount < $currentLoanAmountBP) {
+            if ($lastLoanAmountBP < $loanAmountPence && $loanAmountPence < $currentLoanAmountBP) {
                 //Because the breakpoint gaps aren't regular, we need to be a bit careful here
-                return $this->calculateLinearFeeBetweenBreakPoints(
-                    $lastFeeAmountBP,
-                    $this->getProgressionDecimal($lastLoanAmountBP, $loanAmount, $currentLoanAmountBP),
-                    $currentFeeAmountBP
+                return CurrencyUtilities::getMoneyFromPence(
+                    $this->calculateLinearFeeBetweenBreakPoints(
+                        $lastFeeAmountBP,
+                        $this->getProgressionDecimal($lastLoanAmountBP, $loanAmountPence, $currentLoanAmountBP),
+                        $currentFeeAmountBP
+                    )
                 );
             }
             $lastLoanAmountBP = $currentLoanAmountBP;
             $lastFeeAmountBP = $currentFeeAmountBP;
         }
-        throw new \Exception('No valid loan amount found for amount: ' . $loanAmount);
+        throw new \Exception('No valid loan amount found for amount: ' . $loanAmountPence);
     }
 
     /**

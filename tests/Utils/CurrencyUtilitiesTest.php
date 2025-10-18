@@ -47,6 +47,26 @@ class CurrencyUtilitiesTest extends TestCase
         );
     }
 
+    public function testUtilityCorrectlyAssignsPenceValueToMoneyObject(): void
+    {
+        $input = 2000;
+        $money = CurrencyUtilities::getMoneyFromPence($input);
+        $this->assertEquals(
+            2000,
+            $money->getAmount()
+        );
+    }
+
+    public function testUtilityCorrectlyAssignsGBPAsCurrency(): void
+    {
+        $input = 2000;
+        $money = CurrencyUtilities::getMoneyFromPence($input);
+        $this->assertEquals(
+            'GBP',
+            $money->getCurrency()
+        );
+    }
+
     public function testCurrencyIntegerToDisplayHandlesDecimals(): void
     {
         $input = 1925055;

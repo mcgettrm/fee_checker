@@ -65,6 +65,8 @@ In the root of the project directory, run:
   the two BreakPoint classes).
 - Dependencies can be injected in the `calculate-fee` binary, allowing, for example, different FeeStructureFactory
   implementations to be provided, allowing different strategies to be injected.
+- Eventually, I felt that dealing in integer pence was going to be a limit to extensibility. So, I imported a value
+  object library to cover `Money` usages
 
 ## Further Development
 
@@ -82,7 +84,6 @@ Given more time I would:
   could be provided if I made specific exception classes.
 - Consider whether Exceptions should be caught in the controller and responses boiled down into some kind of response
   object? <-- This feels like a good idea
-- Use value objects for money
 
 ## TODO
 

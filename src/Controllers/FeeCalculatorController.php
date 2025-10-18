@@ -53,8 +53,9 @@ class FeeCalculatorController
                 "The requested term can be only 12 or 24. Requested term: $term"
             );
         }
-        $fee = $this->feeCalculatorService->calculate(CurrencyUtilities::convertStringToPence($amount), (int)$term);
-        return CurrencyUtilities::convertPenceToDisplay($fee);
+        $moneyLoanAmount = CurrencyUtilities::getMoneyFromPence($amountPence);
+        $fee = $this->feeCalculatorService->calculate($moneyLoanAmount, (int)$term);
+        return CurrencyUtilities::convertPenceToDisplay($fee->getAmount());
     }
 
     private function amountIsWithinBounds(int $amount): bool

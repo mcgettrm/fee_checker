@@ -9,6 +9,7 @@ use Lendable\Interview\Factories\DefaultFeeStructureFactory;
 use Lendable\Interview\Repositories\BreakPointHardCodedRepository;
 use Lendable\Interview\Strategies\LinearRoundUpNearestFiveStrategy;
 use Lendable\Interview\Tests\Fixtures\UnorderedBreakPointCollection;
+use Lendable\Interview\Utils\CurrencyUtilities;
 use Lendable\Interview\Utils\FeeStructureTermEnum;
 use PHPUnit\Framework\TestCase;
 
@@ -31,78 +32,78 @@ class LinearRoundUpNearestFiveStrategyTest extends TestCase
 
     public function testFeeReturnsOnBreakpoint(): void
     {
-        $loanAmount = 100000;
+        $loanAmount = CurrencyUtilities::getMoneyFromPence(100000);
         $expectedFee = 7000;
         $strategy = new LinearRoundUpNearestFiveStrategy();
         $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $this->breakPoints24);
         $this->assertEquals(
             $expectedFee,
-            $actualFee,
+            $actualFee->getAmount(),
             'The strategy should return exactly the expected fee if the requested loan amount is present in the mapping'
         );
     }
 
     public function testFeeReturnsLinearOffBreakpointFeeGap40(): void
     {
-        $loanAmount = 1150000;
+        $loanAmount = CurrencyUtilities::getMoneyFromPence(1150000);
         $expectedFee = 46000;
         $strategy = new LinearRoundUpNearestFiveStrategy();
         $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $this->breakPoints24);
         $this->assertEquals(
             $expectedFee,
-            $actualFee,
+            $actualFee->getAmount(),
             'The strategy should be able to calculate a fee using a linear calculation between breakpoints'
         );
     }
 
     public function testFeeReturnsLinearOffBreakpointFeeGap30(): void
     {
-        $loanAmount = 150000;
+        $loanAmount = CurrencyUtilities::getMoneyFromPence(150000);
         $expectedFee = 8500;
         $strategy = new LinearRoundUpNearestFiveStrategy();
         $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $this->breakPoints24);
         $this->assertEquals(
             $expectedFee,
-            $actualFee,
+            $actualFee->getAmount(),
             'The strategy should be able to calculate a fee using a linear calculation between breakpoints'
         );
     }
 
     public function testFeeReturnsLinearOffBreakpointFeeGap30WithRoundUpNearestFive(): void
     {
-        $loanAmount = 140000;
+        $loanAmount = CurrencyUtilities::getMoneyFromPence(140000);
         $expectedFee = 8500;
         $strategy = new LinearRoundUpNearestFiveStrategy();
         $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $this->breakPoints24);
         $this->assertEquals(
             $expectedFee,
-            $actualFee,
+            $actualFee->getAmount(),
             'The strategy should be rounding up the calculated fee to the nearest multiple of 5'
         );
     }
 
     public function testFeeReturnsLinearOffBreakpointFeeGap30WithRoundUpNearestFiveMultipleOfTen(): void
     {
-        $loanAmount = 130000;
+        $loanAmount = CurrencyUtilities::getMoneyFromPence(130000);
         $expectedFee = 8000;
         $strategy = new LinearRoundUpNearestFiveStrategy();
         $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $this->breakPoints24);
         $this->assertEquals(
             $expectedFee,
-            $actualFee,
+            $actualFee->getAmount(),
             'The strategy should be rounding up the calculated fee to the nearest multiple of 5'
         );
     }
 
     public function testLinearRoundupFiveWithGivenInputForTwelveMonthFeeStructure(): void
     {
-        $loanAmount = 1925000;
+        $loanAmount = CurrencyUtilities::getMoneyFromPence(1925000);
         $expectedFee = 38500;
         $strategy = new LinearRoundUpNearestFiveStrategy();
         $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $this->breakPoints12);
         $this->assertEquals(
             $expectedFee,
-            $actualFee,
+            $actualFee->getAmount(),
             'The strategy should be rounding up the calculated fee to the nearest multiple of 5'
         );
     }
@@ -110,7 +111,7 @@ class LinearRoundUpNearestFiveStrategyTest extends TestCase
     public function testUnorderedBreakPointsDoNotCauseException(): void
     {
         //£18,000
-        $loanAmount = 1800000;
+        $loanAmount = CurrencyUtilities::getMoneyFromPence(1800000);
         //£180
         $expectedFee = 18000;
         $strategy = new LinearRoundUpNearestFiveStrategy();
@@ -124,7 +125,7 @@ class LinearRoundUpNearestFiveStrategyTest extends TestCase
         $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $unorderedBreakPointCollection);
         $this->assertEquals(
             $expectedFee,
-            $actualFee,
+            $actualFee->getAmount(),
             'The strategy should the breakpoints prior to running its algorithm'
         );
     }

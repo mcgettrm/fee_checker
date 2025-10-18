@@ -20,5 +20,8 @@
     "test": "phpunit",
     "analyse": "phpstan analyse",
     "qa": "phpunit && phpstan analyse"
+  },
+  "require": {
+    "rebilly/money": "^2.4"
   }
 }

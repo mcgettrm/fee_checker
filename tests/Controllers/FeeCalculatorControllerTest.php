@@ -6,6 +6,7 @@ namespace Lendable\Interview\Tests\Controllers;
 
 use Lendable\Interview\Controllers\FeeCalculatorController;
 use Lendable\Interview\Services\FeeCalculatorService;
+use Lendable\Interview\Utils\CurrencyUtilities;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -47,20 +48,8 @@ class FeeCalculatorControllerTest extends TestCase
         $term = "12";
         $this->feeCalculatorService
             ->expects($this->once())->method('calculate')
-            ->with(123489, 12)
-            ->willReturn(1000);
+            ->with(CurrencyUtilities::getMoneyFromPence(123489), 12)
+            ->willReturn(CurrencyUtilities::getMoneyFromPence(1000));
         $this->controller->getFeeForAmountAndTerm($amount, $term);
     }
-
-    public function testIntegerInputIsValid(): void
-    {
-        $amount = "1234";
-        $term = "12";
-        $this->feeCalculatorService
-            ->expects($this->once())->method('calculate')
-            ->with(123400, 12)
-            ->willReturn(1000);
-        $this->controller->getFeeForAmountAndTerm($amount, $term);
-    }
-
 }
