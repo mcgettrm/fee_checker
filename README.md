@@ -1,141 +1,109 @@
-Lendable Interview Test - Fee Calculation
-=========================================
-PLEASE SEE `docs/README.md` for high level overview of approach and other information
+# Fee Checker
 
+## Intro
 
+Hi Lendable!
 
+I have thoroughly enjoyed completing this test for you. It has been a great mix of architectural challenges, some
+algorithmic complexity and awareness of PHP quirks.
 
-## Background
+Throughout the test, I have attempted to slightly overengineer the solution in order to demonstrate knowledge of some
+common design patterns, hexagonal architecture, SOLID principles, DDD and clean code. I wrote much of the code using TDD
+due to the high amount of precision in the requirements document - which was great fun!
 
-This test is designed to evaluate your problem-solving approach and engineering ability. Design your solution to
-demonstrate your knowledge of OOP concepts, SOLID principles, design patterns, domain-driven design and clean and
-extensible architecture.
+I started with an "integration" test around the `calculate-fee` endpoint but eventually moved the functionality into
+classes and the application structure that you can see. Then, I added unit tests as I fleshed out certain classes.
 
-A strong submission will demonstrate a solid grasp of these fundamentals as a set of well-designed classes and will be
-documented and executable with elegant tests.
+I hope you enjoy reviewing it as much as I enjoyed writing it.
 
-Please note that the main interface of this test is a single console script entrypoint and it is used to review your
-solution programmatically. The `bin/calculate-fee` command **SHOULD** only be used for bootstrapping and running your
-solution, therefore is expected most of your code will live in the `src` and `tests` folders.
+Mike
 
-You **MAY** use any libraries that add value to your solution but please **DO NOT** include a whole web framework (AKA
-Symfony, Laravel, etc) into the test as it is not needed. We don't expect you to use any infrastructure,
-like a database, for this test.
+## Demonstrative App Structure
 
-You **MAY** provide us with a development docker (compose) setup if you are comfortable writing your code in a
-containerized environment and if you want to showcase your docker abilities; but please note this is for your own use
-as a dev environment, so let this not distract you from the main goal of this test.
+![Demonstrative App Structure](docs/demonstrative_app_structure.png)
 
-Please note that your solution will be run with PHP 8.4. You *MAY* use any version you want to develop your solution as
-long as it is backward compatible with the aforementioned version, but please note you are encouraged to use the
-latest features of the language.
+## Project Dependencies
 
-You also **MAY** consider including a README that provides a high-level overview of your approach to the problem and
-your solution.
+- You must have docker desktop installed
 
-## The Test
+## Booting the Project
 
-The requirement is to build a fee calculator that given a monetary **amount** and a **term** (the contractual duration
-of the loan, expressed as a number of months) will produce an appropriate **fee** for a loan based on a fee structure
-and a set of rules described below.
+In the root of the project directory, run:
 
-The calculator **MUST** be implemented as a CLI tool using the provided `bin/calculate-fee` script. It must take the
-mentioned **amount** and **term** as the only arguments and in that order. (Ex: `bin/calculate-fee 20,000.00 24`).
+1. `docker-compose up -d` <-- note that the container will idle on boot so the `-d` is optional but gives you back your
+   terminal window.
+2. Either run `docker-compose exec -it php-service sh` from the root of the project, or enter the container via the Exec
+   tab in the Docker Desktop GUI.
 
-Upon successful execution, the script **MUST** print the resulting **fee** to `stdout` followed by a line feed (`\n`) and
-exit with status code `zero`. The fee must be formatted numerically, with two decimal places and with no currency
-identifiers or symbols (Ex: `1,223.44`). Supporting different currencies is not required as we only care about monetary
-amounts.
+## Development
 
-Upon failure, the script must print any errors to `stderr` and exit with status code `non-zero`.
+`docker compose up -d --build` <-- Force rebuild
+`composer qa` <-- from within the project root when SSHd into the container. Runs phpstan and phpunit tests.
 
-In terms of the business logic, implement your solution such that it fulfils the following requirements / premises:
+## Quality Control
 
-- The fee structure does not follow a formula.
-- Values in between the breakpoints should be interpolated linearly between the lower bound and upper bound that they fall between.
-- The number of breakpoints, their values, or storage might change.
-- The term can be either 12 or 24 (the number of months). You can also assume values will always be within this set.
-- The fee should be rounded up such that the sum of the fee and the loan amount is exactly divisible by £5.
-- The minimum amount for a loan is £1,000, and the maximum is £20,000.
-- You can assume values will always be within this range but **there may be any values up to 2 decimal places**.
+- Level 10 PHPStan
 
-Example inputs/outputs:
+  ![PHPStan Output](docs/phpstan_output.png)
+- Comprehensive Unit Test Coverage
 
-| Loan Amount (in GBP) | Term (in Months) | Fee (in GBP) |
-|----------------------|------------------|--------------|
-| 11,500.00            | 24               | 460.00       |
-| 19,250.00            | 12               | 385.00       |
+  ![PHPUnit Output](docs/phpunit_output.png)
 
-# Fee Structure
+## Extensibility
 
-The fee structure doesn't follow particular algorithm and it is possible that same fee will be applicable for different
-amounts.
+- Interfaces provide a high level of abstraction
+- Strategy pattern allows novel algorithm implementations with minor blast radius
+    - E.g: round up to nearest 10
+    - E.g: implement something non linear
+- `FeeStructure` domain object is a confluence of a breakpoint collection and a strategy, allowing a mix-and match of
+  strategies and term lengths with a minor blast radius
+- Built with hexagonal architecture in mind, the public interface of the `FeeCalculatorService` is protected from
+  knowledge of the "request vector" by the `FeeCalculatorController`. A web controller could be built to process and
+  validate web requests into a format that the domain can understand
+- The `FeeStructureRepositoryInterface` protects the domain layer from knowledge of its persistence. This could be
+  reimplemented to load data from a database instead of from the filesystem (which is effectively what I have done with
+  the two BreakPoint classes).
+- Dependencies can be injected in the `calculate-fee` binary, allowing, for example, different FeeStructureFactory
+  implementations to be provided, allowing different strategies to be injected.
+- Eventually, I felt that dealing in integer pence was going to be a limit to extensibility. So, I imported a value
+  object library to cover `Money` usages
 
-You can assume the fee structure is in Pounds Stirling (GBP), although this is of little importance for the test.
+## Further Development
 
-### Term 12 Breakpoints
+Given more time I would:
 
-| Amount | Fee |
-|--------|-----|
-| 1,000  | 50  |
-| 2,000  | 90  |
-| 3,000  | 90  |
-| 4,000  | 115 |
-| 5,000  | 100 |
-| 6,000  | 120 |
-| 7,000  | 140 |
-| 8,000  | 160 |
-| 9,000  | 180 |
-| 10,000 | 200 |
-| 11,000 | 220 |
-| 12,000 | 240 |
-| 13,000 | 260 |
-| 14,000 | 280 |
-| 15,000 | 300 |
-| 16,000 | 320 |
-| 17,000 | 340 |
-| 18,000 | 360 |
-| 19,000 | 380 |
-| 20,000 | 400 |
+- Import a dependency injection container with autowiring etc etc
+- I might consider triggering the factory build method inside the service rather than in a repository. This kindof sits
+  outside the repository's area of concern.
+- I tend to find the `Service` name a bit generic, my services tend to follow the `facade` pattern; providing abstracted
+  access to a subsystem. I'd probably rename it.
+- Review the decision to handle all currencies in pence.
+- I think some kind of "View" would be useful even though we are currently just outputting scalar responses. I feel that
+  the `CurrencyUtilities` class may be taking on some of the responsibilities of a view.
+- More detailed `Exceptions`. I am currently just using generic exception classes but more granularity and specificity
+  could be provided if I made specific exception classes.
+- Consider whether Exceptions should be caught in the controller and responses boiled down into some kind of response
+  object? <-- This feels like a good idea
+- I would probably change the value object library to https://github.com/moneyphp/money and enable `BCMath` extension -
+  it seems to have better support for mathematical operations which would benefit the strategy patterns well. For now, I
+  think there is value in using a value object to form the contracts between classes rather than just passing around
+  integers.
+- The strategy itself has too many concerns. I would think this could be more composable.
+    - Round up strategy with optional integer
+    - Linear fee inference between breakpoints strategy
+- I might implement a builder pattern for the strategy so that we can compose "Linear" with "RoundUpTo" or "RoundDownTo"
 
+## Requirements (Short)
 
-### Term 24 Breakpoints
+[x] Values in between the breakpoints should be interpolated linearly between the lower bound and upper bound that they
+fall between.
 
-| Amount | Fee |
-|--------|-----|
-| 1,000  | 70  |
-| 2,000  | 100 |
-| 3,000  | 120 |
-| 4,000  | 160 |
-| 5,000  | 200 |
-| 6,000  | 240 |
-| 7,000  | 280 |
-| 8,000  | 320 |
-| 9,000  | 360 |
-| 10,000 | 400 |
-| 11,000 | 440 |
-| 12,000 | 480 |
-| 13,000 | 520 |
-| 14,000 | 560 |
-| 15,000 | 600 |
-| 16,000 | 640 |
-| 17,000 | 680 |
-| 18,000 | 720 |
-| 19,000 | 760 |
-| 20,000 | 800 |
+[x] The number of breakpoints, their values, or storage might change.
 
-# Submitting Your Solution
+[x] The term can be either 12 or 24 (the number of months). You can also assume values will always be within this set.
 
-You **SHOULD NOT** unnecessarily modify the directory structure of your test. Specially, **DO NOT** move the
-`bin/calculate-fee` command nor the `composer.json` from the root directory of your submission, as they are used to
-test your submission automatically.
+[x] The fee should be rounded up such that the sum of the fee and the loan amount is exactly divisible by £5.
 
-If you need to include other files (like docker setup, fixtures, etc) and you feel they would clutter the root
-directory, then you can place those files in a `.dev` folder inside the root directory.
+[x] The minimum amount for a loan is £1,000, and the maximum is £20,000.
 
-If your solution ends up not being runnable by our automated system due to not following these instructions then you
-risk failing your test.
-
-Please **DO NOT** make a public repository for your solution as **we will instantly fail you**. Instead, when you are
-done working with your solution, simply run the `bin/submit` script provided. This will pack your solution into a
-tarball that you must send to us. You risk failing your test if you send your solution in a different way.
+[x] You can assume values will always be within this range but there may be any values up to 2 decimal places.
