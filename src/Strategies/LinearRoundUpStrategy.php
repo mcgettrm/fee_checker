@@ -18,6 +18,7 @@ class LinearRoundUpStrategy implements FeeResolutionStrategyInterface
         Money $loanAmount,
         TermBreakPointCollectionInterface $breakPointCollection
     ): Money {
+        //Check if the loanAmount exists as a breakpoint, if so, no interpolation is required
         $fee = $breakPointCollection->getFeeAtBreakpoint($loanAmount->getAmount());
         if (!is_null($fee)) {
             return CurrencyUtilities::getMoneyFromPence($fee);

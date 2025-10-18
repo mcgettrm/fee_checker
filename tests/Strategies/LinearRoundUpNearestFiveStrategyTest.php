@@ -139,9 +139,9 @@ class LinearRoundUpNearestFiveStrategyTest extends TestCase
 
     public function testZeroFeeBreakPointReturns(): void
     {
-        //£18,000
+        //£19,000
         $loanAmount = CurrencyUtilities::getMoneyFromPence(1900000);
-        //£180
+        //£0
         $expectedFee = 0;
         $strategy = new LinearRoundUpStrategy();
         $unorderedBreakPointCollection = new UnorderedBreakPointCollection([
@@ -158,6 +158,26 @@ class LinearRoundUpNearestFiveStrategyTest extends TestCase
             $expectedFee,
             $actualFee->getAmount(),
             'If the expected fee is valid, it should return, even if it is zero'
+        );
+    }
+
+    public function testNegativeFeeProgression(): void
+    {
+        //£15,000
+        $loanAmount = CurrencyUtilities::getMoneyFromPence(1500000);
+        //£50
+        $expectedFee = 5000;
+        $strategy = new LinearRoundUpStrategy();
+        $unorderedBreakPointCollection = new UnorderedBreakPointCollection([
+            2000000 => 0,
+            1000000 => 10000,
+            0 => 20000
+        ]);
+        $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $unorderedBreakPointCollection);
+        $this->assertEquals(
+            $expectedFee,
+            $actualFee->getAmount(),
+            'Negative fee progression should be a valid linear input'
         );
     }
 }
