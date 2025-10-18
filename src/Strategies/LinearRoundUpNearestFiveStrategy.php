@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Lendable\Interview\Strategies;
 
+use Lendable\Interview\DomainObjects\BreakPointCollection;
 use Lendable\Interview\DomainObjects\TermBreakPointCollectionInterface;
 use Traversable;
 
@@ -16,12 +17,13 @@ class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
         if ($fee = $breakPointCollection->getFeeAtBreakpoint($loanAmount)) {
             return $fee;
         }
-        //TODO::Order the breakpoints first -- needed?
+
+        $orderedBreakPoints = $this->orderBreakPointsByKeys($breakPointCollection);
         $lastLoanAmountBP = 0;
         $lastFeeAmountBP = 0;
-        //TODO:: Assumes ordering
+
         /** @var Traversable<int, int> $breakPointCollection */
-        foreach ($breakPointCollection as $currentLoanAmountBP => $currentFeeAmountBP) {
+        foreach ($orderedBreakPoints as $currentLoanAmountBP => $currentFeeAmountBP) {
             if ($lastLoanAmountBP < $loanAmount && $loanAmount < $currentLoanAmountBP) {
                 //Because the breakpoint gaps aren't regular, we need to be a bit careful here
                 return $this->calculateLinearFeeBetweenBreakPoints(
@@ -34,6 +36,20 @@ class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
             $lastFeeAmountBP = $currentFeeAmountBP;
         }
         throw new \Exception('No valid loan amount found for amount: ' . $loanAmount);
+    }
+
+    /**
+     * Interesting thoughts here - sorting could be the concern of a Repository class but not all strategies would require
+     * ordered inputs. For this strategy, we do need ordered inputs. So, we'll sort here.
+     * @param BreakPointCollection $breakPointCollection
+     * @return int[]
+     */
+    private function orderBreakPointsByKeys(TermBreakPointCollectionInterface $breakPointCollection): array
+    {
+        /** @var array<int,int> $breakPointPairs */
+        $breakPointPairs = iterator_to_array($breakPointCollection);
+        ksort($breakPointPairs, SORT_NUMERIC);
+        return $breakPointPairs;
     }
 
     private function calculateLinearFeeBetweenBreakPoints(
@@ -70,6 +86,6 @@ class LinearRoundUpNearestFiveStrategy implements FeeResolutionStrategyInterface
         $gapValue = $higherBreakpoint - $lowerBreakpoint;
         $gapProgression = $loanAmount - $lowerBreakpoint;
         //What is the progression as a percentage of the gap?
-        return round($gapProgression / $gapValue, 2);
+        return $gapProgression / $gapValue;
     }
 }

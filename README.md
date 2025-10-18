@@ -1,5 +1,9 @@
 Lendable Interview Test - Fee Calculation
 =========================================
+PLEASE SEE `docs/README.md` for high level overview of approach and other information
+
+
+
 
 ## Background
 

@@ -8,6 +8,7 @@ use Lendable\Interview\DomainObjects\TermBreakPointCollectionInterface;
 use Lendable\Interview\Factories\DefaultFeeStructureFactory;
 use Lendable\Interview\Repositories\BreakPointHardCodedRepository;
 use Lendable\Interview\Strategies\LinearRoundUpNearestFiveStrategy;
+use Lendable\Interview\Tests\Fixtures\UnorderedBreakPointCollection;
 use Lendable\Interview\Utils\FeeStructureTermEnum;
 use PHPUnit\Framework\TestCase;
 
@@ -103,6 +104,28 @@ class LinearRoundUpNearestFiveStrategyTest extends TestCase
             $expectedFee,
             $actualFee,
             'The strategy should be rounding up the calculated fee to the nearest multiple of 5'
+        );
+    }
+
+    public function testUnorderedBreakPointsDoNotCauseException(): void
+    {
+        //£18,000
+        $loanAmount = 1800000;
+        //£180
+        $expectedFee = 18000;
+        $strategy = new LinearRoundUpNearestFiveStrategy();
+        $unorderedBreakPointCollection = new UnorderedBreakPointCollection([
+            100000 => 1000,
+            300000 => 3000,
+            200000 => 2000,
+            2000000 => 20000,
+            400000 => 4000,
+        ]);
+        $actualFee = $strategy->calculateFeeForLoanAmount($loanAmount, $unorderedBreakPointCollection);
+        $this->assertEquals(
+            $expectedFee,
+            $actualFee,
+            'The strategy should the breakpoints prior to running its algorithm'
         );
     }
 }

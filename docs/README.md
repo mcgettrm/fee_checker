@@ -14,15 +14,19 @@ due to the high amount of precision in the requirements document - which was gre
 I started with an "integration" test around the `calculate-fee` endpoint but eventually moved the functionality into
 classes and the application structure that you can see. Then, I added unit tests as I fleshed out certain classes.
 
-I hope you enjoy
+I hope you enjoy reviewing it as much as I enjoyed writing it.
 
-You will find a PNG of a conceptual overview of the solution here in the docs folder.
+Mike
+
+## Demonstrative App Structure
+
+![Demonstrative App Structure](./demonstrative_app_structure.png)
 
 ## Project Dependencies
 
 - You must have docker desktop installed
 
-## Quickstart
+## Booting the Project
 
 In the root of the project directory, run:
 
@@ -35,6 +39,15 @@ In the root of the project directory, run:
 
 `docker compose up -d --build` <-- Force rebuild
 `composer qa` <-- from within the project root when SSHd into the container. Runs phpstan and phpunit tests.
+
+## Quality Control
+
+- Level 10 PHPStan
+
+  ![PHPStan Output](./phpstan_output.png)
+- Comprehensive Unit Test Coverage
+
+  ![PHPUnit Output](./phpunit_output.png)
 
 ## Extensibility
 
@@ -63,6 +76,13 @@ Given more time I would:
 - I tend to find the `Service` name a bit generic, my services tend to follow the `facade` pattern; providing abstracted
   access to a subsystem. I'd probably rename it.
 - Review the decision to handle all currencies in pence.
+- I think some kind of "View" would be useful even though we are currently just outputting scalar responses. I feel that
+  the `CurrencyUtilities` class may be taking on some of the responsibilities of a view.
+- More detailed `Exceptions`. I am currently just using generic exception classes but more granularity and specificity
+  could be provided if I made specific exception classes.
+- Consider whether Exceptions should be caught in the controller and responses boiled down into some kind of response
+  object? <-- This feels like a good idea
+- Use value objects for money
 
 ## TODO
 
@@ -71,7 +91,7 @@ Given more time I would:
 - Introduce a dependency injection container?
 - What if the mappings aren't ordered?
 
-## Requirements
+## Requirements (Short)
 
 [x] Values in between the breakpoints should be interpolated linearly between the lower bound and upper bound that they
 fall between.
