@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Lendable\Interview\Services;
 
+use Lendable\Interview\Factories\FeeStructureFactoryInterface;
 use Lendable\Interview\Repositories\BreakPointRepositoryInterface;
 use Lendable\Interview\Utils\FeeStructureTermEnum;
 use Money\Money;
 
 class FeeCalculatorService
 {
-    public function __construct(private readonly BreakPointRepositoryInterface $feeStructureHardCodedRepository)
-    {
+    public function __construct(
+        private readonly BreakPointRepositoryInterface $breakPointRepository,
+        private readonly FeeStructureFactoryInterface $feeStructureFactory,
+    ) {
     }
 
     /**
@@ -27,9 +30,10 @@ class FeeCalculatorService
         if ($enumEntry === null) {
             throw new \Exception("No fee structure could be found for $term");
         }
-        $feeStructure = $this->feeStructureHardCodedRepository->getFeeStructureByTerm(
+        $breakPointCollection = $this->breakPointRepository->getBreakpointMappingForTerm(
             $enumEntry
         );
+        $feeStructure = $this->feeStructureFactory->getFeeStructure($enumEntry, $breakPointCollection);
         return $feeStructure->getFeeForLoanAmount($amount);
     }
 }

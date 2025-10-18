@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Lendable\Interview\Tests\Services;
 
+use Lendable\Interview\DomainObjects\BreakPointCollection;
 use Lendable\Interview\DomainObjects\FeeStructureInterface;
+use Lendable\Interview\Factories\FeeStructureFactoryInterface;
 use Lendable\Interview\Repositories\BreakPointRepositoryInterface;
 use Lendable\Interview\Services\FeeCalculatorService;
 use Lendable\Interview\Utils\CurrencyUtilities;
@@ -15,27 +17,46 @@ use PHPUnit\Framework\TestCase;
 class FeeCalculatorServiceTest extends TestCase
 {
     private FeeCalculatorService $feeCalculatorService;
-    private BreakPointRepositoryInterface&MockObject $feeStructureRepository;
+    private BreakPointRepositoryInterface&MockObject $breakPointRepository;
+
+    private FeeStructureFactoryInterface&MockObject $feeStructureFactory;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->feeStructureRepository = $this->createMock(BreakPointRepositoryInterface::class);
-        $this->feeCalculatorService = new FeeCalculatorService($this->feeStructureRepository);
+        $this->breakPointRepository = $this->createMock(BreakPointRepositoryInterface::class);
+        $this->feeStructureFactory = $this->createMock(FeeStructureFactoryInterface::class);
+        $this->feeCalculatorService = new FeeCalculatorService(
+            $this->breakPointRepository,
+            $this->feeStructureFactory,
+        );
     }
 
-    public function testServiceLoadsRequestedFeeStructureFromRepository(): void
+    public function testServiceThrowsAnExceptionOnInvalidTerm(): void
+    {
+        $amount = CurrencyUtilities::getMoneyFromPence(100000);
+        $this->expectException(\Exception::class);
+        $this->feeCalculatorService->calculate($amount, 55);
+    }
+
+    public function testServiceLoadsRequestedFeeStructureFromFactory(): void
     {
         $term = 24;
         $amount = CurrencyUtilities::getMoneyFromPence(100000);
 
         $mockFeeStructure = $this->createMock(FeeStructureInterface::class);
+        $fakeBreakPointCollection = new BreakPointCollection([]);
+        $this->breakPointRepository
+            ->expects($this->once())
+            ->method('getBreakpointMappingForTerm')
+            ->with(FeeStructureTermEnum::tryFrom($term))
+            ->willReturn($fakeBreakPointCollection);
 
         $fakeCalculatedFee = CurrencyUtilities::getMoneyFromPence(10000);
 
-        $this->feeStructureRepository
+        $this->feeStructureFactory
             ->expects($this->once())
-            ->method('getFeeStructureByTerm')
+            ->method('getFeeStructure')
             ->with(FeeStructureTermEnum::tryFrom($term))
             ->willReturn($mockFeeStructure);
         $mockFeeStructure

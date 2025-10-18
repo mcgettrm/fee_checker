@@ -5,24 +5,11 @@ declare(strict_types=1);
 namespace Lendable\Interview\Repositories;
 
 use Lendable\Interview\DomainObjects\BreakPointCollection;
-use Lendable\Interview\DomainObjects\FeeStructureInterface;
 use Lendable\Interview\DomainObjects\TermBreakPointCollectionInterface;
-use Lendable\Interview\Factories\FeeStructureFactoryInterface;
 use Lendable\Interview\Utils\FeeStructureTermEnum;
 
 class BreakPointHardCodedRepository implements BreakPointRepositoryInterface
 {
-
-    public function __construct(
-        private FeeStructureFactoryInterface $feeStructureFactory,
-    ) {
-    }
-
-    public function getFeeStructureByTerm(FeeStructureTermEnum $term): FeeStructureInterface
-    {
-        return $this->feeStructureFactory->getFeeStructure($term, $this->getBreakpointMappingForTerm($term));
-    }
-
     /**
      * @param FeeStructureTermEnum $term
      * @return TermBreakPointCollectionInterface
